@@ -1,36 +1,18 @@
-WPC PAYMENT INTELLIGENCE™ V8 GENESIS
+# WPC Payment Intelligence™ V9 Beta 001
 
-THIS RELEASE PRESERVES THE WORKING V7 PLATFORM AND ADDS:
-- V8 Genesis branding
-- AI-style analysis progress experience
-- Merchant pricing grade
-- Recommended strategy
-- Priority level
-- Upgraded executive intelligence presentation
-- Existing Netlify lead capture
-- Existing PDF/text parser
-- Existing Hidden Fee Intelligence
-- Existing Opportunity Score and Merchant Health Score
-- Existing savings comparison and printable executive proposal
+Internal beta release.
 
-GITHUB DEPLOYMENT
-1. Extract the ZIP.
-2. In the existing GitHub repository, upload/replace:
-   - index.html
-   - forms.html
-   - netlify.toml
-   - README.md
-3. Commit directly to the main branch.
-4. Netlify will deploy automatically to the existing marketing URL.
-5. Test with fake lead information and the demo statement first.
+## Implemented
+- Clears all statement state before every new upload
+- Improved label-based extraction for volume, fees, transactions, merchant, processor, and period
+- Automatic pricing-model detection: Interchange Plus, Interchange, Tiered, Flat Rate, Cash Discount, Dual Pricing
+- Pricing-model confidence and evidence
+- Explainable Statement Grade A+ through F
+- Visible color-coded grade and score
+- Required-field validation before report generation
+- Verified calculations derived from current statement only
+- Executive summary uses current statement and detected pricing model
+- Powered by WPC Merchant Advantage LLC branding
 
-IMPORTANT
-This is a frontend intelligence release. Its PDF parser works best with
-searchable statements. Results are estimates and should be reviewed before
-being presented as final pricing or guaranteed savings.
-
-
-V8.0.1 HOTFIX
-- Fixed the Build Payment Intelligence Report button.
-- Restored the missing Genesis analysis overlay markup.
-- Added repeat-click reset behavior for the analysis progress steps.
+## Internal testing
+Verify extracted Monthly Volume, Total Fees, Transactions, Effective Rate, Pricing Model, and Statement Grade against the source statement before presenting any report.
