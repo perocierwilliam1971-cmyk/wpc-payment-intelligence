@@ -1,0 +1,7 @@
+WPC Payment Intelligence V9 Beta 003 - Hotfix 8
+
+Fix: Generate / Save Executive Proposal PDF on iPad Safari.
+
+The button now opens a print-ready proposal in a new browser tab synchronously from the user tap, then opens the native print dialog. A visible Print / Save PDF button remains available in the new tab as a fallback.
+
+If Safari blocks the tab, allow pop-ups for the site and tap again.
