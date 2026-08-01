@@ -1,0 +1,38 @@
+# WPC Payment Intelligence™ V7 Lite
+
+**Your Advantage In Payment Solutions**
+
+## Included in this release
+
+- Required merchant lead form before statement upload
+- Required business email validation
+- Netlify Forms lead capture
+- Automatic Analysis ID generation
+- Locked analyzer until the lead form is submitted
+- Existing V6 PDF/text statement parser
+- Hidden Fee Intelligence™
+- Savings Intelligence™
+- Executive dashboard and print proposal
+- Official WPC logo and contact email
+- Responsive desktop, tablet, and mobile design
+
+## Deploy to Netlify
+
+1. Extract this ZIP.
+2. Sign in to Netlify.
+3. Drag the extracted project folder into **Deploy manually**, or push the folder to GitHub and connect the repository.
+4. After deployment, submit one test lead.
+5. In Netlify, open **Forms** and confirm that `merchant-leads` appears.
+6. Configure Netlify form notifications to send new lead alerts to:
+   `perocier01@wpcmerchantadvantage.com`
+
+## Important
+
+Netlify Forms are detected during deployment. Lead storage does not function by double-clicking the local HTML file, although the app provides a local testing fallback that unlocks the analyzer.
+
+The current statement parser works best with searchable PDFs. Image-only statements may require OCR in a future release.
+
+
+## v1.0.1 logo fix
+
+The WPC logo is embedded directly inside `index.html`, so it will display even if the assets folder is accidentally omitted during a manual Netlify deployment.

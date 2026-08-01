@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>WPC Merchant Lead Form</title>
+</head>
+<body>
+  <!--
+    Small static declaration used by Netlify's deploy-time form detector.
+    The live application submits to this form with JavaScript.
+  -->
+  <form
+    name="merchant-leads"
+    method="POST"
+    action="/forms.html"
+    data-netlify="true"
+    netlify-honeypot="bot-field"
+  >
+    <input type="hidden" name="form-name" value="merchant-leads">
+    <p hidden><label>Do not fill this out: <input name="bot-field"></label></p>
+    <input name="analysis_id">
+    <input name="business_name">
+    <input name="contact_name">
+    <input name="business_email" type="email">
+    <input name="phone">
+    <input name="business_type">
+    <input name="monthly_volume">
+    <input name="current_processor">
+    <input name="consent">
+  </form>
+</body>
+</html>
