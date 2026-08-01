@@ -1,0 +1,9 @@
+WPC Payment Intelligence V9 Beta 003 - Hotfix 7
+
+Fixes stale-analysis delivery:
+- Removes automatic demo report build/submission on page load.
+- New Analysis clears prior report, upload, and submission state.
+- Each upload receives a unique statement token.
+- Netlify analysis-results submission is blocked if the active statement changed.
+- PDF generation is blocked until the current statement has been freshly built.
+- Loading the demo no longer auto-builds or auto-submits it.
