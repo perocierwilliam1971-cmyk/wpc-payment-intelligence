@@ -1,0 +1,14 @@
+WPC Payment Intelligence V9 Beta 003 - Hotfix 10
+Browser-Native Executive Proposal PDF
+
+Changes:
+- Removed the failing generate-pdf Netlify Function.
+- Generates a real PDF entirely on the merchant's device with no external library.
+- No popup, print dialog, server runtime, or API key is required.
+- Uses the iPad Share Sheet when file sharing is supported.
+- Falls back to a normal PDF file download on desktop/other browsers.
+- Preserves the fresh-statement guard and analysis-results warm-lead workflow.
+
+Expected Netlify deployment:
+- submit-analysis remains deployed.
+- generate-pdf should no longer be deployed after the repository files are replaced.
