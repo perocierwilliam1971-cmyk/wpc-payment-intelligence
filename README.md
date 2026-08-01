@@ -28,3 +28,9 @@ IMPORTANT
 This is a frontend intelligence release. Its PDF parser works best with
 searchable statements. Results are estimates and should be reviewed before
 being presented as final pricing or guaranteed savings.
+
+
+V8.0.1 HOTFIX
+- Fixed the Build Payment Intelligence Report button.
+- Restored the missing Genesis analysis overlay markup.
+- Added repeat-click reset behavior for the analysis progress steps.
