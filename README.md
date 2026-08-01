@@ -1,18 +1,20 @@
-# WPC Payment Intelligence™ V9 Beta 001
+# WPC Payment Intelligence™ V9 Beta 003 — Hotfix 3
 
-Internal beta release.
+Internal beta patch.
 
-## Implemented
-- Clears all statement state before every new upload
-- Improved label-based extraction for volume, fees, transactions, merchant, processor, and period
-- Automatic pricing-model detection: Interchange Plus, Interchange, Tiered, Flat Rate, Cash Discount, Dual Pricing
-- Pricing-model confidence and evidence
-- Explainable Statement Grade A+ through F
-- Visible color-coded grade and score
-- Required-field validation before report generation
-- Verified calculations derived from current statement only
-- Executive summary uses current statement and detected pricing model
-- Powered by WPC Merchant Advantage LLC branding
+## Corrected
+- Prioritizes DBA Name before legal Business Name when both are present
+- Stops merchant-name extraction at DBA and other recognized labels
+- Detects Equipment / Terminal Fee variants
+- Detects Chargeback Fee variants
+- Aligns severe Tiered/F-grade results with High priority
+- Renames "Hidden Fees Found" to "Reviewable Fees Identified"
 
-## Internal testing
-Verify extracted Monthly Volume, Total Fees, Transactions, Effective Rate, Pricing Model, and Statement Grade against the source statement before presenting any report.
+## Regression target
+Bella Napoli Pizzeria Tiered Pricing test statement:
+- Merchant: Bella Napoli Pizzeria
+- Processor: Worldpay
+- Pricing model: Tiered
+- Reviewable fees: 5
+- Annual fee impact: $1,414.80
+- Priority: High

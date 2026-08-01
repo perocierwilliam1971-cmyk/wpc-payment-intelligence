@@ -1,0 +1,3 @@
+WPC Payment Intelligence™
+Version: V9 Beta 003 Hotfix 3
+Purpose: Internal beta validation
