@@ -1,3 +1,2 @@
-WPC Payment Intelligence™
-Version: V9 Beta 003 Hotfix 4
-Status: Internal production validation
+WPC Payment Intelligence V9 Beta 003 Hotfix 5
+Executive Proposal PDF Button Repair

@@ -1,0 +1,6 @@
+{
+  "name":"wpc-payment-intelligence-v9",
+  "version":"9.0.0-hotfix6",
+  "private":true,
+  "dependencies":{"pdfkit":"^0.15.0"}
+}

@@ -1,32 +1,11 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>WPC Merchant Lead Form</title>
-</head>
-<body>
-  <!--
-    Small static declaration used by Netlify's deploy-time form detector.
-    The live application submits to this form with JavaScript.
-  -->
-  <form
-    name="merchant-leads"
-    method="POST"
-    action="/forms.html"
-    data-netlify="true"
-    netlify-honeypot="bot-field"
-  >
-    <input type="hidden" name="form-name" value="merchant-leads">
-    <p hidden><label>Do not fill this out: <input name="bot-field"></label></p>
-    <input name="analysis_id">
-    <input name="business_name">
-    <input name="contact_name">
-    <input name="business_email" type="email">
-    <input name="phone">
-    <input name="business_type">
-    <input name="monthly_volume">
-    <input name="current_processor">
-    <input name="consent">
-  </form>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"><title>WPC Netlify Forms</title></head><body>
+<form name="merchant-leads" method="POST" action="/forms.html" data-netlify="true" netlify-honeypot="bot-field">
+<input type="hidden" name="form-name" value="merchant-leads"><p hidden><input name="bot-field"></p>
+<input name="analysis_id"><input name="business_name"><input name="contact_name"><input name="business_email" type="email"><input name="phone"><input name="business_type"><input name="monthly_volume"><input name="current_processor"><input name="consent">
+</form>
+<form name="analysis-results" method="POST" action="/forms.html" data-netlify="true">
+<input type="hidden" name="form-name" value="analysis-results">
+<input name="analysis_id"><input name="business_name"><input name="contact_name"><input name="business_email"><input name="phone"><input name="business_type"><input name="monthly_volume"><input name="current_processor"><input name="statement_period"><input name="statement_volume"><input name="processing_cost"><input name="transactions"><input name="effective_rate"><input name="pricing_model"><input name="pricing_confidence"><input name="statement_grade"><input name="merchant_health"><input name="opportunity_score"><input name="reviewable_fee_count"><input name="annual_fee_impact"><input name="estimated_monthly_opportunity"><input name="estimated_annual_opportunity"><input name="priority"><input name="recommendation"><input name="consent">
+</form>
+</body></html>

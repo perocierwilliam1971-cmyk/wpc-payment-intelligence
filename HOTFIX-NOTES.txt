@@ -1,10 +1,7 @@
-WPC PAYMENT INTELLIGENCE™ V9 BETA 003 — HOTFIX 4
+WPC Payment Intelligence V9 Beta 003 - Hotfix 5
 
-FIX INCLUDED
-- Business/DBA name extraction now stops before Contact Name, Business Email, Phone, Business Type, Monthly Volume, Current Processor, and Consent labels.
-- Prevents merchant names from merging with lead-capture contact details.
-- All Hotfix 3 fee detection, scoring, and Netlify form improvements remain intact.
-
-EXPECTED TEST RESULT
-Merchant Name: Test Merchant LLC
-Contact Name remains separate in Netlify Forms.
+- Fixed Generate Executive Proposal button on iPad/Safari.
+- Removed delayed print call that could be blocked after the user gesture.
+- Button now opens the system print/share sheet immediately.
+- Print layout is limited to the merchant executive report for PDF saving.
+- Button label updated to Generate / Save Executive Proposal PDF.

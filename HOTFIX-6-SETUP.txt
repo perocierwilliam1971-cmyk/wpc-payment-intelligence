@@ -1,0 +1,16 @@
+WPC Payment Intelligence V9 Hotfix 6
+
+NEW
+- Saves each completed report to a Netlify form named analysis-results.
+- Emails WPC a warm-lead summary with a generated PDF attachment.
+- Links the lead and report by Analysis ID.
+
+ONE-TIME NETLIFY SETUP
+1. Deploy this ZIP.
+2. In Netlify: Project configuration > Environment variables.
+3. Add RESEND_API_KEY from your Resend account.
+4. Add WPC_NOTIFICATION_EMAIL = perocier01@merchantadvantage.com
+5. Add WPC_FROM_EMAIL using a verified sending address, e.g. reports@yourdomain.com.
+6. Trigger a new deploy after adding variables.
+
+Without RESEND_API_KEY, analysis-results will still be saved in Netlify Forms, but email/PDF delivery will remain disabled.
