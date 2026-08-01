@@ -1,11 +1,10 @@
-WPC Payment Intelligence™ V9 Beta 003 — Hotfix 2
+WPC PAYMENT INTELLIGENCE™ V9 BETA 003 — HOTFIX 4
 
-FIXED
-- Business-name extraction now prioritizes Business Name, Merchant Name, and DBA Name.
-- Generic Merchant matching is used only as a last-resort fallback.
-- Document headings such as Merchant Processing Statement or Revision Test are rejected as merchant names.
+FIX INCLUDED
+- Business/DBA name extraction now stops before Contact Name, Business Email, Phone, Business Type, Monthly Volume, Current Processor, and Consent labels.
+- Prevents merchant names from merging with lead-capture contact details.
+- All Hotfix 3 fee detection, scoring, and Netlify form improvements remain intact.
 
-EXPECTED REVISION TEST RESULT
-Business Name: Will P by Design 2
-Processor: First Data
-Statement Period: August 1, 2026 - August 31, 2026
+EXPECTED TEST RESULT
+Merchant Name: Test Merchant LLC
+Contact Name remains separate in Netlify Forms.
