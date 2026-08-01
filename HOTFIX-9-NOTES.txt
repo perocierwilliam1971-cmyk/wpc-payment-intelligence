@@ -1,0 +1,16 @@
+WPC Payment Intelligence V9 Beta 003 — Hotfix 9
+DIRECT PDF DOWNLOAD / SHARE
+
+What changed:
+- Replaced Safari pop-up and window.print workflow.
+- Added a Netlify serverless PDF endpoint: netlify/functions/generate-pdf.js.
+- The proposal button now requests a real PDF file.
+- On iPad/iPhone, the native Share sheet opens when supported.
+- On desktop or unsupported browsers, the PDF downloads directly.
+- Fresh-statement guard remains active.
+- Warm-lead analysis-results workflow remains active.
+
+Button label:
+Download / Share Executive Proposal PDF
+
+No Resend API key is required to download or share the PDF.
