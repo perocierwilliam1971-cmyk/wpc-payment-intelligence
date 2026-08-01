@@ -1,0 +1,23 @@
+WPC Payment Intelligence V9 Beta 003 Hotfix 1
+
+FIXED
+- Business Name / Merchant Name extraction
+- Processor extraction
+- Statement Period extraction
+- Monthly Platform Fee detection
+- PCI Compliance Fee detection
+- Contradictory recurring-fee recommendation when no fees are detected
+- Visible version label updated to V9 Beta 003
+- Savings language changed to estimated optimization opportunity
+
+EXPECTED TEST RESULTS FOR WILL P BY DESIGN 2 REVISION V2
+- Business Name: Will P by Design 2
+- Processor: First Data
+- Statement Period: August 1, 2026 - August 31, 2026
+- Sales Volume: $25,000.00
+- Total Processing Cost: $628.30
+- Transactions: 96
+- Effective Rate: 2.51%
+- Monthly Platform Fee: $25.00
+- PCI Compliance Fee: $9.95
+- Annual fee impact: $419.40
