@@ -1,20 +1,21 @@
-# WPC Payment Intelligence™ V9 Beta 003 — Hotfix 3
+# WPC Payment Intelligence™ V10 Executive Edition
 
-Internal beta patch.
+Production release for WPC Merchant Advantage LLC.
 
-## Corrected
-- Prioritizes DBA Name before legal Business Name when both are present
-- Stops merchant-name extraction at DBA and other recognized labels
-- Detects Equipment / Terminal Fee variants
-- Detects Chargeback Fee variants
-- Aligns severe Tiered/F-grade results with High priority
-- Renames "Hidden Fees Found" to "Reviewable Fees Identified"
+## Included
+- Merchant lead capture through Netlify Forms
+- Statement analysis and pricing-model detection
+- Merchant Health, Statement Grade, Opportunity Score, and fee intelligence
+- Warm-lead analysis-results capture linked by Analysis ID
+- Browser-generated Executive Proposal PDF with iPad sharing support
+- Fresh-statement guard to prevent stale analysis submissions
 
-## Regression target
-Bella Napoli Pizzeria Tiered Pricing test statement:
-- Merchant: Bella Napoli Pizzeria
-- Processor: Worldpay
-- Pricing model: Tiered
-- Reviewable fees: 5
-- Annual fee impact: $1,414.80
-- Priority: High
+## Deploy
+1. Extract the ZIP.
+2. Upload the contents to the GitHub repository root.
+3. Commit the changes.
+4. Wait for Netlify to publish.
+5. Test lead capture, statement analysis, analysis-results, and PDF sharing.
+
+Powered by WPC Merchant Advantage LLC.
+Your Advantage In Payment Solutions.

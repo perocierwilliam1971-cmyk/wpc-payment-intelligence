@@ -1,1 +1,3 @@
-WPC Payment Intelligence V9 Beta 003 - Hotfix 10 Browser Native PDF
+WPC Payment Intelligence V10 Executive Edition
+Production Release
+Build date: 2026-08-01
