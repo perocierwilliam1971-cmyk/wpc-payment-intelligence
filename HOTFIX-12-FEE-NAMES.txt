@@ -1,0 +1,10 @@
+WPC Payment Intelligence V10.0.2
+Reviewable Fee Name PDF Fix
+
+Changes:
+- Executive Proposal PDF now displays exact detected fee names.
+- Examples: PCI Compliance Fee, Monthly Platform Fee, Statement Fee, Gateway Fee.
+- Preserves monthly amount, annualized impact, and risk level.
+- Warm-lead capture and merchant submission labels remain unchanged.
+
+Existing PDFs will not change. Generate a new report after deployment.
