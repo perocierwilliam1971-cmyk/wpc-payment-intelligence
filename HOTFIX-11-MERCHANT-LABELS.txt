@@ -1,0 +1,8 @@
+WPC Payment Intelligence V10.0.1 — Merchant Submission Labels
+
+CHANGE
+- Netlify analysis-results submissions now use a merchant-readable title.
+- Display format: Business Name — Analysis ID
+- Example: Dynamic Pediatric Dentistry — WPC-20260802-PY0SH
+
+The Analysis ID remains stored separately inside each submission.

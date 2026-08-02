@@ -1,3 +1,1 @@
-WPC Payment Intelligence V10 Executive Edition
-Production Release
-Build date: 2026-08-01
+WPC Payment Intelligence V10.0.1 Executive Production — Merchant Labels
