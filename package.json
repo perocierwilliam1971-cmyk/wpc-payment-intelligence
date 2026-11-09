@@ -3,6 +3,7 @@
   "version": "9.0.0-hotfix10",
   "private": true,
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.6.0",
     "pdfkit": "^0.15.0"
   }
 }
