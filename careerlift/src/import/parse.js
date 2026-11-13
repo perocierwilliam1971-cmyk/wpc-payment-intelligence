@@ -43,7 +43,7 @@ function headingKey(text) {
 const MONTH = '(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?|ene(?:ro)?|febrero|marzo|abr(?:il)?|mayo|junio|julio|ago(?:sto)?|sept?iembre|set|octubre|noviembre|dic(?:iembre)?)\\.?';
 const DATE = `(?:${MONTH}\\s*(?:de\\s+|del\\s+|,\\s*)?\\d{4}|\\d{1,2}\\s*[/.-]\\s*\\d{4}|(?:19|20)\\d{2})`;
 const PRESENT = '(?:present|current|currently|now|today|ongoing|presente|actual(?:idad|mente)?|al\\s+presente|a\\s+la\\s+fecha|hoy)';
-const RANGE_RE = new RegExp(`(${DATE})\\s*(?:-|–|—|to|through|until|a|al|hasta|\\u2013)\\s*(${DATE}|${PRESENT})`, 'i');
+const RANGE_RE = new RegExp(`(${DATE})\\s*(?:-|–|—|to|through|until|a|al|hasta|\\u2013)\\s*(${DATE}|${PRESENT})(?![a-záéíóúñ])`, 'i');
 const SINGLE_DATE_RE = new RegExp(`(?:^|[\\s(,|])((?:${MONTH}\\s*(?:de\\s+)?)?(?:19|20)\\d{2})(?=$|[\\s),|])`, 'i');
 const PRESENT_RE = new RegExp(`^${PRESENT}$`, 'i');
 

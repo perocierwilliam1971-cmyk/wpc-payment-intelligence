@@ -1,0 +1,5 @@
+All fonts in this folder are distributed under the SIL Open Font License 1.1
+(https://openfontlicense.org), obtained from Google Fonts via the
+@expo-google-fonts npm packages: Lato, Roboto, Open Sans, Montserrat, Raleway,
+Source Serif 4, EB Garamond. The OFL permits embedding in PDF and DOCX files
+and commercial use; fonts may not be sold on their own.
