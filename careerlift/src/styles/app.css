@@ -215,3 +215,26 @@ details.qa { border-top: 1px solid var(--line); padding: .5rem 0; } details.qa s
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 @media print { .topbar, .steps, .progress, .footer-nav { display: none; } }
+
+/* Interview Readiness */
+.readiness { display: flex; align-items: center; gap: 1rem; }
+.readiness h2 { margin: 0 0 .2rem; }
+.ring { --p: 0; flex: none; width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(#2a9d8f calc(var(--p) * 1%), #e3e9f0 0); }
+.ring span { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; background: #fff; font-weight: 800; color: var(--brand); }
+.iv-q h3 { margin-top: .4rem; font-size: 1.08rem; }
+.badge { display: inline-block; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; padding: .15rem .55rem; border-radius: 999px; background: #e8f1fb; color: var(--brand); }
+.badge.k-gap, .badge.k-short, .badge.k-change { background: var(--warn-bg); color: #6b4500; }
+.badge.k-metric { background: var(--ok-bg); color: var(--ok); }
+.badge.k-bilingual, .badge.k-rec { background: #f1e9ff; color: #5b21b6; }
+.linklike { background: none; border: 0; padding: .3rem 0; color: var(--brand-2); text-decoration: underline; font: inherit; font-size: .88rem; cursor: pointer; min-height: 36px; }
+.timer { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; margin-top: .3rem; }
+.timer-out { font-weight: 700; color: var(--brand); }
+details.playbook > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; min-height: 44px; }
+details.playbook > summary::-webkit-details-marker { display: none; }
+details.playbook > summary h2 { margin: 0; }
+.script { margin-top: .5rem; }
+.avoid li { color: #8a1c12; }
+.drill-stage { margin: 1rem 0; }
+.drill-lang { font-weight: 800; letter-spacing: .1em; color: var(--brand-2); margin: 0; }
+.drill-switch { font-size: 1.3rem; font-weight: 800; color: #b42318; margin: .6rem 0 .2rem; }
+.ok { color: var(--ok); font-weight: 600; }

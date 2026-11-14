@@ -11,9 +11,10 @@ import { renderImprove } from './views/improve.js';
 import { renderDesign } from './views/design.js';
 import { renderDownload } from './views/download.js';
 import { renderToolkit } from './views/toolkit.js';
+import { renderInterview } from './views/interview.js';
 
-const STEPS = ['start', 'edit', 'improve', 'design', 'download', 'toolkit'];
-const VIEWS = { start: renderStart, edit: renderEdit, improve: renderImprove, design: renderDesign, download: renderDownload, toolkit: renderToolkit };
+const STEPS = ['start', 'edit', 'improve', 'design', 'download', 'interview', 'toolkit'];
+const VIEWS = { start: renderStart, edit: renderEdit, improve: renderImprove, design: renderDesign, download: renderDownload, interview: renderInterview, toolkit: renderToolkit };
 
 setFontBaseUrl(`${import.meta.env.BASE_URL}fonts/`);
 injectFontFaces();

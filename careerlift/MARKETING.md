@@ -1,24 +1,34 @@
 # Marketing & monetization plan
 
-## Positioning
+## Market reality
 
-**CareerLift is an affordable resume improvement and career toolkit — not another template site.**
-It helps people say what they actually achieved, presents it professionally, and supports the steps after the resume (letters, messages, interviews), in English and Spanish.
+General resume builders (Canva, Google Docs, Zety, Resume.io, Kickresume, Teal, Rezi) and general interview prep (Google Interview Warmup, Big Interview, Yoodli) are **saturated**, and free ChatGPT covers both for anyone who knows what to ask. A general English-language "resume + interview" tool would compete on price against free. CareerLift therefore wins on **audience and workflow**, not on templates.
 
-Three proof points to lead with (all true and demonstrable):
-1. **Improves your words, not just your layout** — Achievement Detective turns duties into results, using only what you tell it.
-2. **What you see is what you download** — six genuinely different designs; the PDF matches the preview.
-3. **Private and one-time** — runs in your browser; $9.99 once, no subscription.
+## Primary customer
 
-## Audiences & messages
+**Bilingual Hispanic job seekers in Puerto Rico and the U.S. mainland**, especially people moving into or up in customer service, healthcare, logistics, banking and office roles.
+
+Why they buy:
+1. **Professional Spanish, including Puerto Rico usage** (resumé, destrezas, preparación académica, bachillerato). Most tools are English-first or machine-translated.
+2. **Bilingual interviews are their real pain.** Employers switch languages to verify fluency; CareerLift drills exactly that.
+3. **Confidence.** Many in this group undersell themselves, especially in their second language. Achievement Detective + interview scripts address that directly.
+4. **Price fits.** One-time $9.99; this audience avoids subscriptions.
+
+What makes it different from free tools: **the resume and the interview are connected.** Interview Readiness reads the customer's own resume and predicts where they'll be pushed — their numbers, gaps, short jobs, career change, the language switch — then gives them a scripted answer to practice. Templates are table stakes; this is the product.
+
+## Secondary customer: organizations (higher revenue per sale)
+
+Workforce centers and job-training programs, the Puerto Rico Department of Labor's programs, community colleges, libraries, re-entry and veteran-transition programs. They buy for many participants. Pitch: bilingual, private (no participant data to store or secure), no per-user AI costs. Suggested starting offer: annual site license; validate price with 3–5 programs before publishing it.
+
+## Messages by audience
 
 | Audience | Pain | Message |
 | --- | --- | --- |
-| Experienced professionals | Resume reads like a job description | "Turn 10 years of duties into results hiring managers notice." |
-| Career changers | Don't know how to translate skills | Transferable-skills guide + career-change steps |
-| Returning workers (parents, caregivers, veterans) | Gaps, outdated resume | Honest gap guidance; start from your old resume |
-| Recent graduates | Little experience | Guided questions find achievements in school, jobs, volunteering |
-| Bilingual / Puerto Rico job seekers | Tools are English-only or machine-translated | Professional Spanish incl. PR terms; resume language independent of UI language |
+| Bilingual / PR job seekers (primary) | Underselling; language switch in interviews | "Your experience, said professionally — in both languages. Then practice the questions your resume will trigger." |
+| Returning workers (caregivers, veterans) | Gaps | "Know exactly how to explain your gap — in two calm sentences." |
+| Career changers | "Why should we take a chance on you?" | Career-change script built from your transferable skills |
+| Experienced professionals | Resume reads like a job description | "Turn duties into results — then defend every number in the interview." |
+| Organizations | Limited staff time per participant | "A bilingual resume and interview coach for every participant, with zero data to manage." |
 
 ## Pricing: $9.99 one-time (proposed, validate before committing)
 
@@ -30,13 +40,13 @@ Three proof points to lead with (all true and demonstrable):
 ## Launch content (ready to adapt)
 
 **Headline:** Don’t Just Build a Resume. Build Your Next Opportunity.
-**Subhead:** Upload your resume, turn duties into results, pick a professional design, and download PDF & Word — in English or Spanish. One-time $9.99.
+**Subhead:** The bilingual resume & interview coach. Build a professional resume in English or Spanish, then rehearse the exact questions your resume will trigger — including the language switch. One-time $9.99.
 
 **Short post (EN):** Most resume sites sell you a template. CareerLift helps you figure out what to *say*: guided questions turn "responsible for scheduling" into "Scheduled 22 associates across two shifts" — using your real numbers. Six designs, PDF + Word, cover letters and interview prep. $9.99 once. Your resume never leaves your device.
 
 **Short post (ES-PR):** La mayoría de las páginas te venden una plantilla. CareerLift te ayuda a decidir qué decir: preguntas guiadas convierten “responsable de los turnos” en “Coordiné los turnos de 22 empleados”, con tus cifras reales. Seis diseños, PDF y Word, cartas de presentación y preparación para entrevistas. $9.99, pago único. Tu resumé nunca sale de tu dispositivo.
 
-Channels with $0 budget: local workforce centers and libraries (offer a free workshop), Puerto Rico and Latino professional Facebook groups, community colleges' career services, veteran transition groups, short before/after videos (TikTok/Reels) using sample data.
+Channels with $0 budget (in priority order for the primary customer): Puerto Rico and Latino professional Facebook groups, Puerto Rico Department of Labor and job-training centers, local workforce centers and libraries (offer a free workshop), community colleges' career services, veteran transition groups, short bilingual before/after and "they switched to English mid-interview" videos (TikTok/Reels) using sample data.
 
 ## Claims to avoid (legal and trust)
 

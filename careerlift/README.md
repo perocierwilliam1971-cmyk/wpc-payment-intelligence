@@ -2,7 +2,7 @@
 
 > Don’t Just Build a Resume. Build Your Next Opportunity.
 
-A static, privacy-first resume improvement and career toolkit web app. Upload a PDF/DOCX/TXT resume (or start from scratch), improve the content with Achievement Detective™ Lite, design it with one of six templates, and download PDF, Word and text files. English, Spanish and Puerto Rico Spanish.
+The bilingual resume and interview coach, built for Spanish/English job seekers in Puerto Rico and the U.S. Upload a PDF/DOCX/TXT resume (or start from scratch), improve it with Achievement Detective™ Lite, design it with one of six templates, download PDF/Word/text — then prepare with **Interview Readiness**: questions predicted from your own resume, scripted answers for difficult situations, and bilingual language-switch drills. English, Spanish and Puerto Rico Spanish.
 
 **Running cost: $0.** No backend, no database, no AI API. Everything runs in the browser; Netlify's free tier serves static files.
 
@@ -18,8 +18,8 @@ A static, privacy-first resume improvement and career toolkit web app. Upload a 
 cd careerlift
 npm install
 npm run dev          # http://localhost:5173  (landing: /, app: /app.html)
-npm test             # 50 unit tests (parser, writer, export→re-import roundtrips)
-npm run test:e2e     # 12 browser tests (Chromium; iPad/iPhone emulated)
+npm test             # 65 unit tests (parser, writer, export→re-import roundtrips)
+npm run test:e2e     # 16 browser tests (Chromium; iPad/iPhone emulated)
 npm run build        # production build in dist/
 ```
 
@@ -31,7 +31,7 @@ The repository root already contains a different site (WPC Payment Intelligence)
 
 1. Netlify → **Add new site → Import an existing project** → pick this GitHub repo.
 2. **Base directory:** `careerlift` · Build command and publish directory are read from `careerlift/netlify.toml` (`npm ci && npm run build`, `dist`).
-3. Optional: **Site settings → Environment variables →** `VITE_PURCHASE_URL` = your checkout link (Stripe Payment Link, Lemon Squeezy or Gumroad). Without it, the landing page's buy button says "Try the launch preview" and opens the app.
+3. Optional: **Site settings → Environment variables →** `VITE_PURCHASE_URL` = your checkout link (Stripe Payment Link, Lemon Squeezy or Gumroad). Without it, the landing page's buy button says "Try the launch preview" and opens the app. `VITE_CONTACT_EMAIL` = the address for organization inquiries; without it, the organizations section shows "contact details coming soon".
 4. Deploy. Then run through the manual checklist in TESTING.md on a real iPhone and iPad.
 
 Manual alternative: `npm run build` and drag the `dist/` folder onto app.netlify.com/drop.
@@ -66,6 +66,7 @@ Key decisions (and why):
 - **Bullets are drawn as shapes**, not glyphs, so they never go missing in a font.
 - **iOS downloads are two-step** (Create file → Download/Share). Safari requires `navigator.share()` inside the tap; generating a PDF first would break that.
 - **Embedded editable data in PDFs is opt-in.** It lets users re-upload a CareerLift PDF losslessly, but PDF attachments can trip corporate email filters.
+- **Interview Readiness is rules over the resume model** (`src/interview/`): metrics, gaps (6+ months), jobs under 12 months, career change vs. target role, current job, bilingual languages. Playbook scripts use the same optional-segment templates as Achievement Detective, so a blank field is omitted rather than invented.
 - **Premium AI later:** the writer is isolated in `src/achievement/`. An optional AI provider can implement the same `improveBullet()` / `buildStatement()` interface behind a server function without touching layout, preview or exports.
 
 ## Project layout
@@ -79,6 +80,7 @@ careerlift/
   src/export/                 pdf.js, docx.js, txt.js, download.js (iOS-aware)
   src/import/                 extract.js (PDF/DOCX/TXT), parse.js (rules), index.js
   src/achievement/            writer.js (rules), questions.js (12 fields, EN/ES)
+  src/interview/              analyze.js (questions from the resume), playbooks.js (11 situations), readiness.js
   src/toolkit/content.js      cover letter, messages, ATS, interview, STAR, LinkedIn...
   src/ui/                     app shell, store (localStorage), views/
   public/fonts/               7 OFL font families

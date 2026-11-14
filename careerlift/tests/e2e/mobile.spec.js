@@ -27,7 +27,7 @@ test('mobile: upload, switch template, recolor, preview, download PDF', async ({
   await expect(pages.locator('.preview-page').first()).toBeVisible();
 
   // No horizontal scrolling on any step.
-  for (const step of ['start', 'edit', 'improve', 'design', 'download', 'toolkit']) {
+  for (const step of ['start', 'edit', 'improve', 'design', 'download', 'interview', 'toolkit']) {
     await page.getByTestId(`nav-${step}`).click();
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow, `horizontal overflow on ${step}`).toBeLessThanOrEqual(1);

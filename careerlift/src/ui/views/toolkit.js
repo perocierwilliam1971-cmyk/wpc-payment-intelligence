@@ -155,6 +155,9 @@ function interview(panel) {
   const prof = state.toolkit.detective?.prof || 'general';
   const fieldQs = questionsFor(prof).slice(0, 3).map((q) => q.q);
   panel.append(
+    h('section', { class: 'card alert-info' }, h('h2', {}, t('iv.title')),
+      h('p', {}, es ? 'Para preguntas basadas en TU resumé, guías para situaciones difíciles y práctica bilingüe, usa Preparación para Entrevistas.' : 'For questions based on YOUR resume, difficult-situation guides and bilingual practice, use Interview Readiness.'),
+      h('a', { class: 'btn btn-primary', href: '#interview' }, `${t('iv.title')} →`)),
     h('section', { class: 'card' }, h('h2', {}, t('toolkit.interview')), h('ul', {}, INTERVIEW_TIPS.map((x) => h('li', {}, pick(x))))),
     h('section', { class: 'card' }, h('h2', {}, es ? 'Preguntas comunes' : 'Common questions'),
       INTERVIEW_QUESTIONS.map((q, i) => h('details', { class: 'qa' }, h('summary', {}, pick(q.q)), h('p', { class: 'tip' }, '💡 ', pick(q.tip)),

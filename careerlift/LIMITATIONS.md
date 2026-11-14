@@ -23,6 +23,13 @@
 - The app JavaScript is ~580 KB gzipped (PDF engine, font parser, PDF reader). First load on slow mobile connections takes a few seconds; afterwards it's cached.
 - **No payment or license enforcement.** A static site can't protect paid features: anyone can open `app.html`. See "Monetization" below.
 
+**Interview Readiness**
+- Questions are predicted by rules (metrics, dates, titles, languages), not by understanding the job. They cover the predictable pressure points, not every question an employer could ask.
+- Gap detection depends on parseable dates; "Summer 2019" or missing dates are skipped.
+- No audio recording or speech feedback yet (deliberately: recording on iPhone Safari is fragile and needs real-device testing). Practice is spoken aloud with a timer.
+- Salary and illegal-question guidance is general information, not legal advice; laws differ by state and change (Puerto Rico Ley 16-2017 is cited — verify before launch).
+- Answers are stored only on the device, like the resume.
+
 **Content**
 - Achievement Detective is rule-based: it can rephrase and structure, not understand. Grammar of generated statements depends on how users fill blanks.
 - Spanish verb conjugation covers common regular/irregular verbs, not all.
@@ -34,6 +41,7 @@
 2. **Payment:** use a hosted checkout (Stripe Payment Link / Lemon Squeezy / Gumroad) that delivers an access link or license key; add a small Netlify Function to verify keys. Accept that determined users can bypass client-side checks — price is low enough that most won't.
 3. Tagged/accessible PDFs (structure tree) — useful for public-sector applicants.
 4. OCR for scanned resumes as an optional, lazy-loaded module.
-5. Optional premium AI (behind a Netlify Function, user-consented, never on by default), using the existing `improveBullet()` interface.
-6. Job-tailoring mode: duplicate the resume per application, using the keyword matcher.
-7. Code-split the PDF reader so the first page loads faster.
+5. Optional audio recording for mock interviews (MediaRecorder, kept on-device) once tested on real iPhones.
+6. Optional premium AI (behind a Netlify Function, user-consented, never on by default), using the existing `improveBullet()` interface.
+7. Job-tailoring mode: duplicate the resume per application, using the keyword matcher.
+8. Code-split the PDF reader so the first page loads faster.

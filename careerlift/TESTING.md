@@ -1,14 +1,14 @@
 # Testing report
 
-Date of last run: 2026-11-13. Environment: Linux, Node 22, Chromium (Playwright 1.63), LibreOffice + poppler for file verification.
+Date of last run: 2026-11-14. Environment: Linux, Node 22, Chromium (Playwright 1.63), LibreOffice + poppler for file verification.
 
 ## Summary
 
 | Area | Status | Evidence |
 | --- | --- | --- |
-| Unit tests (50) | ✅ Passed | `npm test` |
-| Browser journey, desktop Chromium (8) | ✅ Passed | `npm run test:e2e` |
-| Emulated iPad + iPhone in Chromium (4) | ✅ Passed | same; **emulation only** |
+| Unit tests (65) | ✅ Passed | `npm test` |
+| Browser tests, desktop Chromium (10) | ✅ Passed | `npm run test:e2e` |
+| Emulated iPad + iPhone in Chromium (6) | ✅ Passed | same; **emulation only** |
 | Same browser suite under production CSP headers | ✅ Passed | `scripts/serve-with-headers.mjs` + `BASE_URL=http://localhost:4174 npm run test:e2e -- --project=desktop-chromium` |
 | DOCX opens and renders (LibreOffice) — all 6 templates | ✅ Passed (visual review) | `scripts/render-docx-samples.mjs` |
 | Real Safari / WebKit | ❌ **Not tested** | No WebKit or Apple device available here |
@@ -40,6 +40,11 @@ Date of last run: 2026-11-13. Environment: Linux, Node 22, Chromium (Playwright 
 - **Preview vs PDF:** first page of the preview screenshot compared with the downloaded PDF rendered at the same width; mean pixel difference (0–255): classic 1.19, executive 1.03, modern 1.04, minimal 0.85, creative 1.09, corporate 1.10 (threshold 3).
 - Progress survives a page reload (localStorage); backup JSON downloads.
 
+**Interview Readiness**
+- Questions are generated from the resume: its metric lines, why-leaving for the current employer, a career-change question when the target role differs, gaps (between jobs and since the last job, with correct lengths in EN/ES), jobs shorter than 12 months, bilingual verification when both languages are listed. Every question and playbook exists in English and Spanish.
+- Playbook scripts never contain numbers the user didn't type and drop blank optional sentences (property test over all 11 playbooks × 2 languages).
+- Browser: target role → career-change question appears; answering raises the readiness score; "Build my answer" opens the right playbook; a Spanish script is generated; the practice timer counts down; the bilingual drill prompts the switch and is counted; the prep-sheet PDF contains the questions, answers and scripts; Spanish (PR) interface shows Spanish questions.
+
 **Mobile (emulated)**
 - iPhone 13 and iPad (gen 7) profiles: upload, template switch, palette, preview pane toggle, PDF download; no horizontal scrolling on any step; buttons/controls ≥ 38px (most 44px).
 
@@ -62,6 +67,7 @@ Devices: ☐ iPad Safari ☐ iPad Chrome ☐ iPhone Safari ☐ iPhone Chrome ☐
 11. ☐ Open DOCX in Google Docs and Apple Pages: note differences (expected: table-based sidebars may shift slightly).
 12. ☐ Download TXT → paste into an online application form.
 13. ☐ Toolkit: cover letter PDF/DOCX download, copy buttons, ATS keyword matcher.
+13b. ☐ Interview Readiness: set a target role, answer a question, open a playbook from it, run the 90-second bilingual drill with the screen locked/unlocked (iOS pauses timers in background tabs), download the prep sheet.
 14. ☐ Close the browser, reopen: work is still there. Download backup JSON, restore it on another device.
 15. ☐ Spanish (Puerto Rico): interface text, resume headings (“Destrezas”, “Preparación Académica”), downloaded PDF accents (á é í ó ú ñ ¿ ¡).
 16. ☐ Upload a real **Workday/LinkedIn-generated** PDF and a **Canva** PDF; note extraction quality.

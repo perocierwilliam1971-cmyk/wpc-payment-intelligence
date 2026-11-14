@@ -32,7 +32,7 @@ a { color: var(--brand-2); }
 .rule { height: 2px; background: var(--gold); }
 .w40 { width: 40%; } .w45 { width: 45%; } .w50 { width: 50%; } .w55 { width: 55%; } .w60 { width: 60%; } .w70 { width: 70%; } .w80 { width: 80%; } .w85 { width: 85%; } .w90 { width: 90%; }
 .badge-before, .badge-after { position: absolute; left: 0; right: 0; margin: auto; width: fit-content; max-width: 92%; padding: .55rem .9rem; border-radius: 10px; font-size: .9rem; font-weight: 600; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
-.badge-before { bottom: 64px; background: #fdecea; color: #8a1c12; text-decoration: line-through; }
+.badge-before { bottom: 92px; background: #fdecea; color: #8a1c12; text-decoration: line-through; }
 .badge-after { bottom: 12px; background: #e7f6ee; color: #0d5c37; }
 .band { padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1rem, 5vw, 4rem); }
 .band.alt { background: var(--bg); }

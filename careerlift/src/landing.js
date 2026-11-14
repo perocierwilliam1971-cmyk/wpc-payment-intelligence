@@ -3,12 +3,20 @@ import './styles/landing.css';
 // Set VITE_PURCHASE_URL (e.g. a Stripe Payment Link, Lemon Squeezy or Gumroad
 // checkout) in Netlify's environment variables to turn the Buy button on.
 const PURCHASE_URL = import.meta.env.VITE_PURCHASE_URL || '';
+// Set VITE_CONTACT_EMAIL to enable the organizations contact button.
+const CONTACT_EMAIL = import.meta.env.VITE_CONTACT_EMAIL || '';
 
 const ES = {
-  'nav.features': 'Funciones', 'nav.compare': 'Comparar', 'nav.pricing': 'Precio',
-  'hero.eyebrow': 'Mejora de resumé + herramientas profesionales',
+  'nav.features': 'Funciones', 'nav.compare': 'Comparar', 'nav.pricing': 'Precio', 'nav.interview': 'Entrevistas',
+  'hero.eyebrow': 'Tu coach bilingüe de resumé y entrevistas',
   'hero.title': 'No solo crees un resumé. Construye tu próxima oportunidad.',
-  'hero.lead': 'Sube el resumé que tienes, convierte tus tareas diarias en resultados claros, elige un diseño profesional y descarga archivos PDF y Word impecables, en español o inglés.',
+  'hero.lead': 'Hecho para quienes buscan empleo en español e inglés, en Puerto Rico y Estados Unidos. Convierte tu experiencia en un resumé profesional en español o inglés y luego ensaya las preguntas exactas que tu resumé va a provocar, incluido el momento en que cambian de idioma.',
+  'iv.title': 'Llega a la entrevista sabiendo las preguntas', 'iv.lead': 'Las páginas de plantillas gratis terminan en el resumé. CareerLift lee tu resumé como lo hará quien te entreviste y te prepara para donde te van a presionar.',
+  'iv1.t': 'Preguntas basadas en tu propio resumé', 'iv1.d': '“Escribiste que redujiste los errores en 32%: ¿cómo lo mediste?” CareerLift encuentra tus cifras, pausas de empleo, trabajos cortos y cambios de carrera y los convierte en las preguntas que realmente vas a escuchar.',
+  'iv2.t': 'Guiones para momentos difíciles', 'iv2.d': 'Respuestas guiadas para una pausa en el empleo, un despido o cesantía, la pregunta del salario, “estás sobrecualificado/a”, cambios de carrera y preguntas que no deberían hacerte. Tus datos, organizados en una respuesta para practicar.',
+  'iv3.t': 'Práctica de cambio de idioma', 'iv3.d': 'En las entrevistas bilingües cambian de idioma a mitad de la respuesta. Ejercicios cronometrados te avisan cuándo cambiar para que nunca te tome por sorpresa. Descarga tu hoja de preparación para repasarla antes de entrar.',
+  'org.title': 'Para programas de empleo, colegios y organizaciones comunitarias', 'org.lead': 'Ofrece a cada participante un coach bilingüe de resumé y entrevistas. Sus datos se quedan en su propio dispositivo: no tienes expedientes que almacenar ni proteger, ni costos de IA por usuario.', 'org.cta': 'Solicitar precios para organizaciones',
+  'c.iv': 'Preguntas de entrevista basadas en tu resumé', 'p.6': 'Preparación para Entrevistas: preguntas personalizadas, guiones para situaciones difíciles y ejercicios bilingües',
   'hero.cta': 'Comenzar', 'hero.price': 'Pago único de $9.99 · sin suscripción',
   'hero.privacy': '🔒 Tu resumé se procesa en tu navegador. No se sube a nuestros servidores.',
   'hero.before': 'Antes: “Responsable de las quejas de clientes”', 'hero.after': 'Después: “Resolví más de 40 casos de clientes al día” — con tus cifras reales',
@@ -61,10 +69,23 @@ function apply() {
     note.textContent = lang === 'es' ? 'El pago aún no está activado en este sitio.' : 'Checkout is not enabled on this site yet.';
   }
 }
+function applyOrg() {
+  const cta = document.getElementById('org-cta');
+  const note = document.getElementById('org-note');
+  if (CONTACT_EMAIL) {
+    cta.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('CareerLift for organizations')}`;
+    note.textContent = '';
+  } else {
+    cta.hidden = true;
+    note.textContent = lang === 'es' ? 'Escríbenos para precios por volumen (contacto disponible pronto).' : 'Volume pricing available — contact details coming soon.';
+  }
+}
 toggle.addEventListener('click', () => {
   lang = lang === 'es' ? 'en' : 'es';
   try { localStorage.setItem('careerlift:landing-lang', lang); } catch { /* ignore */ }
   apply();
+  applyOrg();
 });
 document.getElementById('yr').textContent = new Date().getFullYear();
 apply();
+applyOrg();
