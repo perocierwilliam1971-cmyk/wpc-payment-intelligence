@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>WPC Lead CRM</title>
+<style>
+:root{
+  --navy:#071426;--gold:#d7aa3e;--ink:#172033;--muted:#64748b;--line:#dbe3ef;--bg:#f3f6fb;--panel:#fff;--red:#c93636;
+  --new:#1769e0;--new-bg:#e8f0fd;--warm:#e8590c;--warm-bg:#fdeee4;--sale:#157347;--sale-bg:#e3f4ea;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+header{background:var(--navy);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+header .brand{font-weight:700;letter-spacing:.2px}
+header .brand span{color:var(--gold)}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav button{background:transparent;border:0;color:#c7d2e3;padding:8px 12px;border-radius:8px}
+nav button.on{background:rgba(255,255,255,.12);color:#fff}
+header .spacer{flex:1}
+main{padding:16px;max-width:1400px;margin:0 auto}
+.btn{border:1px solid var(--line);background:var(--panel);padding:8px 14px;border-radius:9px}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy);font-weight:600}
+.btn.danger{color:var(--red)}
+.btn:disabled{opacity:.5;cursor:default}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.toolbar input[type=search]{flex:1;min-width:180px;padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:#fff}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;display:inline-flex;align-items:center;gap:6px}
+.chip.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.dot.new{background:var(--new)}.dot.warm{background:var(--warm)}.dot.sale{background:var(--sale)}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px}
+.badge.new{background:var(--new-bg);color:var(--new)}.badge.warm{background:var(--warm-bg);color:var(--warm)}.badge.sale{background:var(--sale-bg);color:var(--sale)}
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.col{background:#e9eef6;border-radius:12px;padding:10px;min-height:200px}
+.col h3{margin:2px 4px 10px;font-size:13px;text-transform:uppercase;letter-spacing:.6px;display:flex;align-items:center;gap:8px}
+.col h3 .n{margin-left:auto;color:var(--muted);font-weight:500}
+.col.new h3{color:var(--new)}.col.warm h3{color:var(--warm)}.col.sale h3{color:var(--sale)}
+.col.dragover{outline:2px dashed var(--muted);outline-offset:-4px}
+.card{background:var(--panel);border-radius:10px;padding:10px 12px;margin-bottom:8px;border-left:5px solid var(--line);box-shadow:0 1px 2px rgba(7,20,38,.06);cursor:pointer}
+.card.new{border-left-color:var(--new)}.card.warm{border-left-color:var(--warm)}.card.sale{border-left-color:var(--sale)}
+.card .t{font-weight:650}
+.card .s{color:var(--muted);font-size:12.5px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.signals{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.sig{font-size:11.5px;padding:2px 7px;border-radius:6px;background:#f1f4f9;color:var(--muted)}
+.sig.open{background:#eef2ff;color:#4338ca}.sig.click{background:#ecfeff;color:#0e7490}
+.sig.reply{background:#fef3c7;color:#92400e;font-weight:600}.sig.seq{background:#f5f3ff;color:#6d28d9}.sig.unsub{background:#fee2e2;color:var(--red)}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);background:#f8fafc}
+tr.row{cursor:pointer}tr.row:hover td{background:#f8fafc}
+td.stripe{width:6px;padding:0}td.stripe.new{background:var(--new)}td.stripe.warm{background:var(--warm)}td.stripe.sale{background:var(--sale)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+.empty{color:var(--muted);text-align:center;padding:30px 10px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.panel h2{margin:0 0 10px;font-size:17px}
+.muted{color:var(--muted)}
+label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:10px 0 4px}
+input[type=text],input[type=email],input[type=tel],input[type=number],input[type=password],select,textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#fff}
+textarea{min-height:110px;resize:vertical}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.overlay{position:fixed;inset:0;background:rgba(7,20,38,.45);display:none;z-index:20}
+.overlay.on{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--bg);z-index:21;transform:translateX(100%);transition:transform .2s;overflow-y:auto}
+.drawer.on{transform:none;box-shadow:-8px 0 30px rgba(0,0,0,.15)}
+.drawer .head{background:#fff;padding:16px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:1}
+.drawer .body{padding:16px}
+.x{float:right;border:0;background:transparent;font-size:22px;line-height:1;color:var(--muted)}
+.statuspick{display:flex;gap:6px;margin-top:10px}
+.statuspick button{flex:1;border:2px solid var(--line);background:#fff;border-radius:9px;padding:8px;font-weight:600}
+.statuspick button.new{color:var(--new)}.statuspick button.warm{color:var(--warm)}.statuspick button.sale{color:var(--sale)}
+.statuspick button.new.on{border-color:var(--new);background:var(--new-bg);color:var(--new)}
+.statuspick button.warm.on{border-color:var(--warm);background:var(--warm-bg);color:var(--warm)}
+.statuspick button.sale.on{border-color:var(--sale);background:var(--sale-bg);color:var(--sale)}
+.timeline{list-style:none;margin:0;padding:0}
+.timeline li{padding:8px 0 8px 22px;border-left:2px solid var(--line);margin-left:6px;position:relative}
+.timeline li::before{content:"";position:absolute;left:-6px;top:12px;width:10px;height:10px;border-radius:50%;background:var(--muted)}
+.timeline li.open::before{background:#4338ca}.timeline li.click::before{background:#0e7490}.timeline li.reply::before{background:#d97706}
+.timeline li.sent::before{background:var(--navy)}.timeline li.failed::before,.timeline li.unsubscribed::before{background:var(--red)}
+.timeline li.faint{opacity:.55}
+.timeline .when{font-size:12px;color:var(--muted)}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(620px,calc(100% - 32px));max-height:calc(100% - 32px);overflow-y:auto;background:#fff;border-radius:14px;padding:20px;z-index:22;display:none}
+.modal.on{display:block}
+.row-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.step{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:#fbfcfe}
+.step .stephead{display:flex;align-items:center;gap:8px;font-weight:600}
+.step .stephead input{width:80px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;z-index:40;display:none;max-width:calc(100% - 32px)}
+.toast.err{background:var(--red)}
+.check{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.check:last-child{border:0}
+.ok{color:var(--sale);font-weight:700}.no{color:var(--red);font-weight:700}
+.login{max-width:380px;margin:12vh auto;background:#fff;padding:24px;border-radius:14px;border:1px solid var(--line)}
+code{background:#f1f4f9;padding:1px 5px;border-radius:5px;font-size:12.5px}
+.hidden{display:none!important}
+@media (max-width:860px){.board{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.hide-sm{display:none}}
+</style>
+</head>
+<body>
+
+<div id="loginView" class="login hidden">
+  <h2 style="margin-top:0">WPC Lead CRM</h2>
+  <p class="muted">Enter your CRM access code (the <code>CRM_ADMIN_TOKEN</code> set in Netlify).</p>
+  <form id="loginForm">
+    <input type="password" id="tokenInput" autocomplete="current-password" required>
+    <div class="row-actions"><button class="btn primary" type="submit">Open CRM</button></div>
+  </form>
+  <p id="loginErr" class="no"></p>
+</div>
+
+<div id="app" class="hidden">
+  <header>
+    <div class="brand">WPC Merchant Advantage <span>CRM</span></div>
+    <nav>
+      <button data-tab="board" class="on">Pipeline</button>
+      <button data-tab="list">All leads</button>
+      <button data-tab="sequences">Sequences</button>
+      <button data-tab="setup">Setup</button>
+    </nav>
+    <div class="spacer"></div>
+    <button class="btn gold" id="addLeadBtn">+ New lead</button>
+  </header>
+
+  <main>
+    <section id="tab-board">
+      <div class="toolbar">
+        <input type="search" id="search" placeholder="Search business, contact, email, phone…">
+        <button class="btn" id="refreshBtn" title="Reload">↻ Refresh</button>
+      </div>
+      <div class="board" id="board"></div>
+    </section>
+
+    <section id="tab-list" class="hidden">
+      <div class="toolbar">
+        <input type="search" id="search2" placeholder="Search…">
+        <span id="chips"></span>
+      </div>
+      <div class="tablewrap"><table>
+        <thead><tr><th class="stripe"></th><th>Business</th><th>Status</th><th class="hide-sm">Contact</th><th>Email activity</th><th class="hide-sm">Sequence</th><th class="hide-sm">Added</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table></div>
+    </section>
+
+    <section id="tab-sequences" class="hidden">
+      <div class="toolbar"><div style="flex:1" class="muted">A sequence is a series of emails sent automatically, days apart. It stops by itself when the lead replies, unsubscribes or is marked Sale.</div>
+        <button class="btn primary" id="newSeqBtn">+ New sequence</button></div>
+      <div id="seqList"></div>
+    </section>
+
+    <section id="tab-setup" class="hidden">
+      <div class="panel">
+        <h2>Connection check</h2>
+        <div id="checks" class="muted">Loading…</div>
+        <div class="row-actions"><button class="btn" id="runNowBtn">Check replies &amp; send due emails now</button></div>
+        <p id="lastRun" class="muted"></p>
+      </div>
+      <div class="panel">
+        <h2>How the colors work</h2>
+        <p><span class="badge new"><span class="dot new"></span>New</span> just added, no real engagement yet.</p>
+        <p><span class="badge warm"><span class="dot warm"></span>Warm</span> engaged: replied to you, or ran a statement analysis on the website. Leads move here automatically when they reply.</p>
+        <p><span class="badge sale"><span class="dot sale"></span>Sale</span> closed. Any running sequence stops.</p>
+        <p class="muted">Opens never change the color on their own: Apple Mail and corporate security scanners "open" emails automatically, so an open alone isn't proof of interest. Opens logged within 2 minutes of sending are shown faded as "possibly automatic".</p>
+      </div>
+      <div class="panel">
+        <h2>Access</h2>
+        <button class="btn danger" id="logoutBtn">Sign out of this device</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<aside class="drawer" id="drawer">
+  <div class="head">
+    <button class="x" data-close aria-label="Close">×</button>
+    <div id="dTitle" style="font-size:18px;font-weight:700"></div>
+    <div id="dSub" class="muted"></div>
+    <div class="statuspick" id="dStatus">
+      <button class="new" data-status="new">● New</button>
+      <button class="warm" data-status="warm">● Warm</button>
+      <button class="sale" data-status="sale">● Sale</button>
+    </div>
+  </div>
+  <div class="body">
+    <div class="panel">
+      <h2>Email</h2>
+      <div id="dSeq"></div>
+      <div class="row-actions" style="justify-content:flex-start">
+        <button class="btn primary" id="dEmailBtn">Send email</button>
+        <button class="btn" id="dEnrollBtn">Start sequence</button>
+        <button class="btn" id="dReplyBtn" title="Use if they replied by phone or from a different address">Mark replied</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Activity</h2>
+      <ul class="timeline" id="dTimeline"></ul>
+    </div>
+    <div class="panel">
+      <h2>Details</h2>
+      <form id="dForm"></form>
+      <div class="row-actions">
+        <button class="btn danger" id="dDeleteBtn">Delete lead</button>
+        <button class="btn primary" id="dSaveBtn">Save details</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div class="modal" id="leadModal">
+  <button class="x" data-close aria-label="Close">×</button>
+  <h2 style="margin-top:0">New lead</h2>
+  <form id="leadForm"></form>
+  <label>Status</label>
+  <div class="statuspick" id="newStatus">
+    <button type="button" class="new on" data-status="new">● New</button>
+    <button type="button" class="warm" data-status="warm">● Warm</button>
+    <button type="button" class="sale" data-status="sale">● Sale</button>
+  </div>
+  <div class="row-actions"><button class="btn" data-close>Cancel</button><button class="btn primary" id="saveLeadBtn">Add lead</button></div>
+</div>
+
+<div class="modal" id="emailModal">
+  <button class="x" data-close aria-label="Close">×</button>
+  <h2 style="margin-top:0">Send email</h2>
+  <p class="muted" id="emailTo"></p>
+  <label>Subject</label><input type="text" id="emailSubject">
+  <label>Message</label><textarea id="emailBody" style="min-height:200px">Hi {{first_name}},
+
+</textarea>
+  <p class="muted" style="font-size:12px">Placeholders: <code>{{first_name}}</code> <code>{{business_name}}</code> <code>{{current_processor}}</code> <code>{{sender_name}}</code>. Links are tracked automatically. An unsubscribe footer is added.</p>
+  <div class="row-actions"><button class="btn" data-close>Cancel</button><button class="btn primary" id="sendEmailBtn">Send</button></div>
+</div>
+
+<div class="modal" id="enrollModal">
+  <button class="x" data-close aria-label="Close">×</button>
+  <h2 style="margin-top:0">Start a sequence</h2>
+  <select id="enrollSelect"></select>
+  <p class="muted" id="enrollInfo"></p>
+  <div class="row-actions"><button class="btn" data-close>Cancel</button><button class="btn primary" id="enrollBtn">Start</button></div>
+</div>
+
+<div class="modal" id="seqModal">
+  <button class="x" data-close aria-label="Close">×</button>
+  <h2 style="margin-top:0" id="seqTitle">Sequence</h2>
+  <label>Name</label><input type="text" id="seqName" placeholder="e.g. Cold outreach — restaurants">
+  <div id="seqSteps" style="margin-top:12px"></div>
+  <button class="btn" id="addStepBtn">+ Add email</button>
+  <p class="muted" style="font-size:12px">"Wait" is days after the previous email (the first email: days after starting; 0 = send right away). Placeholders: <code>{{first_name}}</code> <code>{{contact_name}}</code> <code>{{business_name}}</code> <code>{{business_type}}</code> <code>{{current_processor}}</code> <code>{{sender_name}}</code></p>
+  <div class="row-actions"><button class="btn danger" id="deleteSeqBtn">Delete</button><span style="flex:1"></span><button class="btn" data-close>Cancel</button><button class="btn primary" id="saveSeqBtn">Save sequence</button></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => [...document.querySelectorAll(s)];
+  const STATUS = { new: 'New', warm: 'Warm', sale: 'Sale' };
+  const FIELDS = [
+    ['business_name', 'Business name', 'text'], ['contact_name', 'Contact name', 'text'],
+    ['email', 'Email', 'email'], ['phone', 'Phone', 'tel'],
+    ['business_type', 'Business type', 'text'], ['current_processor', 'Current processor', 'text'],
+    ['monthly_volume', 'Monthly volume', 'text'], ['source', 'Source', 'text'],
+  ];
+  let token = '';
+  try { token = localStorage.getItem('wpcCrmToken') || ''; } catch {}
+  let leads = [], sequences = [], current = null, filter = 'all', newStatus = 'new', editingSeq = null;
+
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  function ago(ts) {
+    if (!ts) return '';
+    const s = Math.round((Date.now() - ts) / 1000);
+    if (s < 60) return 'just now';
+    if (s < 3600) return Math.floor(s / 60) + 'm ago';
+    if (s < 86400) return Math.floor(s / 3600) + 'h ago';
+    if (s < 86400 * 30) return Math.floor(s / 86400) + 'd ago';
+    return new Date(ts).toLocaleDateString();
+  }
+  const when = (ts) => ts ? new Date(ts).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : '';
+  function toast(msg, err) {
+    const t = $('#toast'); t.textContent = msg; t.className = 'toast' + (err ? ' err' : ''); t.style.display = 'block';
+    clearTimeout(toast.t); toast.t = setTimeout(() => (t.style.display = 'none'), err ? 6000 : 3000);
+  }
+
+  async function api(path, opts = {}) {
+    const res = await fetch('/api/crm/' + path, {
+      ...opts,
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: opts.body ? JSON.stringify(opts.body) : undefined,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.status === 401) { showLogin('Access code was not accepted.'); throw new Error('Not signed in'); }
+    if (!res.ok) throw new Error(data.error || 'Request failed (' + res.status + ')');
+    return data;
+  }
+
+  // ---------- auth ----------
+  function showLogin(msg) {
+    $('#app').classList.add('hidden'); $('#loginView').classList.remove('hidden'); $('#loginErr').textContent = msg || '';
+  }
+  $('#loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    token = $('#tokenInput').value.trim();
+    try { localStorage.setItem('wpcCrmToken', token); } catch {}
+    start();
+  });
+  $('#logoutBtn').onclick = () => { try { localStorage.removeItem('wpcCrmToken'); } catch {} token = ''; showLogin(); };
+
+  async function start() {
+    if (!token) return showLogin();
+    try {
+      await Promise.all([loadLeads(), loadSequences()]);
+      $('#loginView').classList.add('hidden'); $('#app').classList.remove('hidden');
+    } catch (e) { if (e.message !== 'Not signed in') showLogin(e.message); }
+  }
+
+  // ---------- data ----------
+  async function loadLeads() { leads = (await api('leads')).leads; render(); }
+  async function loadSequences() { sequences = (await api('sequences')).sequences; renderSequences(); }
+
+  function signals(l) {
+    const c = l.activity.counts, last = l.activity.last, out = [];
+    if (c.reply) out.push(`<span class="sig reply">↩ Replied ${ago(last.reply)}</span>`);
+    if (c.open) out.push(`<span class="sig open" title="${c.open} open(s)">👁 Opened ${c.open > 1 ? c.open + '× · ' : ''}${ago(last.open)}</span>`);
+    else if (c.openauto) out.push(`<span class="sig" title="Opened within 2 minutes of sending — often an automatic scanner">👁 Auto-open?</span>`);
+    if (c.click) out.push(`<span class="sig click">🔗 Clicked ${ago(last.click)}</span>`);
+    if (c.sent && !c.open && !c.reply) out.push(`<span class="sig">✉ Sent ${c.sent} · no open yet</span>`);
+    if (l.sequence?.state === 'active') out.push(`<span class="sig seq">⟳ ${esc(l.sequence.name)} ${l.sequence.step}/${l.sequence.total}</span>`);
+    if (l.unsubscribed) out.push('<span class="sig unsub">Unsubscribed</span>');
+    return out.join('');
+  }
+  function matches(l, q) {
+    if (!q) return true;
+    return ['business_name', 'contact_name', 'email', 'phone', 'current_processor', 'business_type']
+      .some((f) => String(l[f] || '').toLowerCase().includes(q));
+  }
+  const title = (l) => l.business_name || l.contact_name || l.email || 'Unnamed lead';
+  const sortLeads = (arr) => arr.sort((a, b) => (b.activity.last.reply || 0) - (a.activity.last.reply || 0) || (b.updatedAt || 0) - (a.updatedAt || 0));
+
+  function render() {
+    const q = ($('#search').value || $('#search2').value || '').trim().toLowerCase();
+    const shown = sortLeads(leads.filter((l) => matches(l, q)));
+    // board
+    $('#board').innerHTML = Object.keys(STATUS).map((s) => {
+      const items = shown.filter((l) => l.status === s);
+      return `<div class="col ${s}" data-col="${s}"><h3><span class="dot ${s}"></span>${STATUS[s]}<span class="n">${items.length}</span></h3>
+        ${items.map((l) => `<div class="card ${s}" draggable="true" data-id="${l.id}">
+          <div class="t">${esc(title(l))}</div>
+          <div class="s">${esc([l.contact_name, l.email || l.phone].filter(Boolean).join(' · '))}</div>
+          <div class="signals">${signals(l)}</div></div>`).join('') || '<div class="empty">No leads</div>'}</div>`;
+    }).join('');
+    // chips + table
+    const counts = { all: shown.length };
+    for (const s in STATUS) counts[s] = shown.filter((l) => l.status === s).length;
+    $('#chips').innerHTML = ['all', ...Object.keys(STATUS)].map((s) =>
+      `<button class="chip ${filter === s ? 'on' : ''}" data-filter="${s}">${s === 'all' ? '' : `<span class="dot ${s}"></span>`}${s === 'all' ? 'All' : STATUS[s]} · ${counts[s]}</button>`).join(' ');
+    const rows = shown.filter((l) => filter === 'all' || l.status === filter);
+    $('#tbody').innerHTML = rows.map((l) => `<tr class="row" data-id="${l.id}">
+      <td class="stripe ${l.status}"></td>
+      <td><b>${esc(title(l))}</b><div class="muted">${esc(l.email || l.phone || '')}</div></td>
+      <td><span class="badge ${l.status}"><span class="dot ${l.status}"></span>${STATUS[l.status]}</span></td>
+      <td class="hide-sm">${esc(l.contact_name || '')}</td>
+      <td><div class="signals" style="margin:0">${signals(l) || '<span class="muted">—</span>'}</div></td>
+      <td class="hide-sm">${l.sequence ? esc(l.sequence.name) + ` <span class="muted">(${l.sequence.state})</span>` : '<span class="muted">—</span>'}</td>
+      <td class="hide-sm muted">${ago(l.createdAt)}</td></tr>`).join('') || '<tr><td colspan="7" class="empty">No leads yet. Click “+ New lead”.</td></tr>';
+  }
+
+  // ---------- board interactions ----------
+  $('#board').addEventListener('click', (e) => { const c = e.target.closest('.card'); if (c) openLead(c.dataset.id); });
+  $('#tbody').addEventListener('click', (e) => { const r = e.target.closest('tr.row'); if (r) openLead(r.dataset.id); });
+  $('#chips').addEventListener('click', (e) => { const c = e.target.closest('[data-filter]'); if (c) { filter = c.dataset.filter; render(); } });
+  $('#board').addEventListener('dragstart', (e) => { const c = e.target.closest('.card'); if (c) e.dataTransfer.setData('text/plain', c.dataset.id); });
+  $('#board').addEventListener('dragover', (e) => { const col = e.target.closest('.col'); if (col) { e.preventDefault(); col.classList.add('dragover'); } });
+  $('#board').addEventListener('dragleave', (e) => { const col = e.target.closest('.col'); if (col) col.classList.remove('dragover'); });
+  $('#board').addEventListener('drop', async (e) => {
+    const col = e.target.closest('.col'); if (!col) return;
+    e.preventDefault(); col.classList.remove('dragover');
+    const id = e.dataTransfer.getData('text/plain'); const lead = leads.find((l) => l.id === id);
+    if (lead && lead.status !== col.dataset.col) await changeStatus(id, col.dataset.col);
+  });
+  ['#search', '#search2'].forEach((s) => $(s).addEventListener('input', (e) => { $('#search').value = $('#search2').value = e.target.value; render(); }));
+  $('#refreshBtn').onclick = () => loadLeads().then(() => toast('Updated'));
+
+  async function changeStatus(id, status) {
+    try {
+      await api('leads/' + id, { method: 'PATCH', body: { status } });
+      if (status === 'sale') toast('🎉 Marked as sale');
+      await loadLeads();
+      if (current?.id === id) openLead(id);
+    } catch (e) { toast(e.message, true); }
+  }
+
+  // ---------- tabs ----------
+  $$('nav button').forEach((b) => b.onclick = () => {
+    $$('nav button').forEach((x) => x.classList.toggle('on', x === b));
+    $$('main > section').forEach((s) => s.classList.toggle('hidden', s.id !== 'tab-' + b.dataset.tab));
+    if (b.dataset.tab === 'setup') loadStatus();
+  });
+
+  // ---------- modals ----------
+  function openModal(id) { $('#overlay').classList.add('on'); $(id).classList.add('on'); }
+  function closeModals() {
+    $$('.modal').forEach((m) => m.classList.remove('on'));
+    if (!$('#drawer').classList.contains('on')) $('#overlay').classList.remove('on');
+  }
+  function closeAll() { $$('.modal').forEach((m) => m.classList.remove('on')); $('#drawer').classList.remove('on'); $('#overlay').classList.remove('on'); current = null; }
+  $('#overlay').onclick = () => ($$('.modal.on').length ? closeModals() : closeAll());
+  document.addEventListener('click', (e) => { if (e.target.closest('[data-close]')) (e.target.closest('.drawer') ? closeAll() : closeModals()); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') ($$('.modal.on').length ? closeModals() : closeAll()); });
+
+  const fieldsHtml = (l = {}) => `<div class="grid2">${FIELDS.map(([k, label, type]) =>
+    `<div><label>${label}</label><input type="${type}" name="${k}" value="${esc(l[k] || '')}"></div>`).join('')}</div>
+    <label>Notes</label><textarea name="notes">${esc(l.notes || '')}</textarea>`;
+  const formData = (form) => Object.fromEntries(new FormData(form).entries());
+
+  // new lead
+  $('#addLeadBtn').onclick = () => {
+    $('#leadForm').innerHTML = fieldsHtml({ source: 'Manual' }); newStatus = 'new';
+    $$('#newStatus button').forEach((b) => b.classList.toggle('on', b.dataset.status === 'new'));
+    openModal('#leadModal'); $('#leadForm input').focus();
+  };
+  $('#newStatus').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; newStatus = b.dataset.status; $$('#newStatus button').forEach((x) => x.classList.toggle('on', x === b)); };
+  $('#saveLeadBtn').onclick = async () => {
+    const btn = $('#saveLeadBtn'); btn.disabled = true;
+    try { await api('leads', { method: 'POST', body: { ...formData($('#leadForm')), status: newStatus } }); closeModals(); toast('Lead added'); await loadLeads(); }
+    catch (e) { toast(e.message, true); } finally { btn.disabled = false; }
+  };
+
+  // ---------- lead drawer ----------
+  const EV = {
+    created: (e) => `Lead added (${esc(e.source)})`,
+    status: (e) => `Status: ${STATUS[e.from] || e.from} → <b>${STATUS[e.to] || e.to}</b>${e.reason && e.reason !== 'manual' ? ' — ' + esc(e.reason) : ''}`,
+    sent: (e) => `Email sent: “${esc(e.subject)}”${e.sequence ? ` <span class="muted">(${esc(e.sequence)}, email ${e.step})</span>` : ''}`,
+    failed: (e) => `<span class="no">Email failed:</span> ${esc(e.error)}`,
+    open: () => 'Opened the email',
+    openauto: () => 'Opened within 2 min of sending — possibly an automatic scanner',
+    click: (e) => `Clicked <a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.url)}</a>`,
+    reply: (e) => `<b>Replied</b>${e.subject ? `: “${esc(e.subject)}”` : ''} <span class="muted">(${esc(e.source)})</span>`,
+    replyauto: (e) => `Auto-reply received${e.subject ? `: “${esc(e.subject)}”` : ''} (doesn't count as a reply)`,
+    unsubscribed: () => '<span class="no">Unsubscribed</span>',
+    sequence: (e) => `Sequence “${esc(e.name)}” ${esc(e.action)}${e.reason ? ' — ' + esc(e.reason) : ''}`,
+    analysis: (e) => `Ran a statement analysis on the website${e.grade ? ` (grade ${esc(e.grade)})` : ''}`,
+  };
+  async function openLead(id) {
+    try {
+      const { lead, events } = await api('leads/' + id);
+      current = lead;
+      $('#dTitle').textContent = title(lead);
+      $('#dSub').textContent = [lead.contact_name, lead.email, lead.phone].filter(Boolean).join(' · ');
+      $$('#dStatus button').forEach((b) => b.classList.toggle('on', b.dataset.status === lead.status));
+      const s = lead.sequence;
+      $('#dSeq').innerHTML = lead.unsubscribed ? '<p class="no">This lead unsubscribed. Do not email them.</p>'
+        : s ? `<p>Sequence <b>${esc(s.name)}</b>: ${s.state === 'active'
+            ? `sent ${s.step} of ${s.total}. Next email ${s.nextAt ? when(s.nextAt) : 'soon'}. <button class="btn" id="dStopBtn">Stop</button>`
+            : esc(s.state) + (s.stopReason ? ' — ' + esc(s.stopReason) : '')}</p>`
+        : '<p class="muted">Not in a sequence.</p>';
+      if ($('#dStopBtn')) $('#dStopBtn').onclick = stopSeq;
+      $('#dEmailBtn').disabled = $('#dEnrollBtn').disabled = !lead.email || lead.unsubscribed;
+      $('#dEnrollBtn').disabled ||= s?.state === 'active';
+      const a = lead.analysis;
+      $('#dTimeline').innerHTML = (a ? `<li class="reply"><b>Analysis:</b> grade ${esc(a.statement_grade || '?')}, effective rate ${esc(a.effective_rate || '?')}%, est. ${esc(a.estimated_annual_opportunity || '?')}/yr opportunity</li>` : '') +
+        (events.map((e) => `<li class="${e.type === 'replyauto' ? '' : e.type} ${e.type === 'openauto' ? 'open faint' : ''}">${(EV[e.type] || (() => esc(e.type)))(e)}<div class="when">${when(e.at)}</div></li>`).join('') || '<li>No activity yet</li>');
+      $('#dForm').innerHTML = fieldsHtml(lead);
+      $('#overlay').classList.add('on'); $('#drawer').classList.add('on');
+    } catch (e) { toast(e.message, true); }
+  }
+  $('#dStatus').onclick = (e) => { const b = e.target.closest('button'); if (b && current && b.dataset.status !== current.status) changeStatus(current.id, b.dataset.status); };
+  $('#dSaveBtn').onclick = async () => {
+    try { await api('leads/' + current.id, { method: 'PATCH', body: formData($('#dForm')) }); toast('Saved'); await loadLeads(); openLead(current.id); }
+    catch (e) { toast(e.message, true); }
+  };
+  $('#dDeleteBtn').onclick = async () => {
+    if (!confirm(`Delete ${title(current)} and all its history? This can't be undone.`)) return;
+    try { await api('leads/' + current.id, { method: 'DELETE' }); closeAll(); toast('Lead deleted'); loadLeads(); } catch (e) { toast(e.message, true); }
+  };
+  $('#dReplyBtn').onclick = async () => {
+    try { await api('leads/' + current.id + '/reply', { method: 'POST' }); toast('Marked as replied'); await loadLeads(); openLead(current.id); } catch (e) { toast(e.message, true); }
+  };
+  async function stopSeq() {
+    try { await api('leads/' + current.id + '/unenroll', { method: 'POST' }); toast('Sequence stopped'); await loadLeads(); openLead(current.id); } catch (e) { toast(e.message, true); }
+  }
+
+  // send email
+  $('#dEmailBtn').onclick = () => { $('#emailTo').textContent = 'To: ' + current.email; $('#emailSubject').value = ''; openModal('#emailModal'); $('#emailSubject').focus(); };
+  $('#sendEmailBtn').onclick = async () => {
+    const btn = $('#sendEmailBtn'); btn.disabled = true;
+    try {
+      await api('leads/' + current.id + '/email', { method: 'POST', body: { subject: $('#emailSubject').value, body: $('#emailBody').value } });
+      closeModals(); toast('Email sent'); await loadLeads(); openLead(current.id);
+    } catch (e) { toast(e.message, true); } finally { btn.disabled = false; }
+  };
+
+  // enroll
+  $('#dEnrollBtn').onclick = () => {
+    if (!sequences.length) return toast('Create a sequence first (Sequences tab)', true);
+    $('#enrollSelect').innerHTML = sequences.map((s) => `<option value="${s.id}">${esc(s.name)} — ${s.steps.length} email(s)</option>`).join('');
+    updateEnrollInfo(); openModal('#enrollModal');
+  };
+  function updateEnrollInfo() {
+    const s = sequences.find((x) => x.id === $('#enrollSelect').value); if (!s) return;
+    let day = 0;
+    $('#enrollInfo').innerHTML = s.steps.map((st, i) => { day += st.delayDays; return `Email ${i + 1} on day ${day}: “${esc(st.subject)}”`; }).join('<br>');
+  }
+  $('#enrollSelect').onchange = updateEnrollInfo;
+  $('#enrollBtn').onclick = async () => {
+    const btn = $('#enrollBtn'); btn.disabled = true;
+    try { await api('leads/' + current.id + '/enroll', { method: 'POST', body: { sequenceId: $('#enrollSelect').value } }); closeModals(); toast('Sequence started'); await loadLeads(); openLead(current.id); }
+    catch (e) { toast(e.message, true); } finally { btn.disabled = false; }
+  };
+
+  // ---------- sequences ----------
+  function renderSequences() {
+    $('#seqList').innerHTML = sequences.map((s) => {
+      const active = leads.filter((l) => l.sequence?.sequenceId === s.id && l.sequence.state === 'active').length;
+      return `<div class="panel" style="cursor:pointer" data-seq="${s.id}"><h2>${esc(s.name)}</h2>
+        <div class="muted">${s.steps.length} email(s) over ${s.steps.reduce((a, x) => a + x.delayDays, 0)} days · ${active} lead(s) active</div></div>`;
+    }).join('') || '<div class="panel empty">No sequences yet.</div>';
+  }
+  $('#seqList').onclick = (e) => { const p = e.target.closest('[data-seq]'); if (p) editSeq(sequences.find((s) => s.id === p.dataset.seq)); };
+  $('#newSeqBtn').onclick = () => editSeq(null);
+  const DEFAULT_STEPS = [
+    { delayDays: 0, subject: 'Quick question about {{business_name}}’s card processing', body: 'Hi {{first_name}},\n\nI help businesses like {{business_name}} find hidden fees on their card processing statements. Most owners I talk to are overpaying without knowing it.\n\nWould you be open to a free statement review? It takes about 10 minutes.\n\n{{sender_name}}' },
+    { delayDays: 3, subject: 'Re: {{business_name}}’s card processing', body: 'Hi {{first_name}},\n\nFollowing up on my last note. If you send me one recent processing statement, I’ll show you exactly what you’re paying and where you could save. No obligation.\n\n{{sender_name}}' },
+    { delayDays: 5, subject: 'Should I close your file?', body: 'Hi {{first_name}},\n\nI haven’t heard back, so I’ll assume now isn’t the right time. If that changes, just reply to this email.\n\n{{sender_name}}' },
+  ];
+  function editSeq(seq) {
+    editingSeq = seq;
+    $('#seqTitle').textContent = seq ? 'Edit sequence' : 'New sequence';
+    $('#seqName').value = seq?.name || '';
+    $('#deleteSeqBtn').classList.toggle('hidden', !seq);
+    $('#seqSteps').innerHTML = '';
+    (seq?.steps || DEFAULT_STEPS).forEach(addStep);
+    openModal('#seqModal');
+  }
+  function addStep(st = { delayDays: 2, subject: '', body: '' }) {
+    const d = document.createElement('div'); d.className = 'step';
+    d.innerHTML = `<div class="stephead"><span class="n"></span><span style="flex:1"></span>Wait <input type="number" min="0" max="365" class="delay" value="${st.delayDays}"> days
+      <button type="button" class="btn danger rm" title="Remove">✕</button></div>
+      <label>Subject</label><input type="text" class="subj" value="${esc(st.subject)}">
+      <label>Body</label><textarea class="bodytxt">${esc(st.body)}</textarea>`;
+    d.querySelector('.rm').onclick = () => { d.remove(); numberSteps(); };
+    $('#seqSteps').appendChild(d); numberSteps();
+  }
+  const numberSteps = () => $$('#seqSteps .step').forEach((s, i) => (s.querySelector('.n').textContent = 'Email ' + (i + 1)));
+  $('#addStepBtn').onclick = () => addStep();
+  $('#saveSeqBtn').onclick = async () => {
+    const body = { name: $('#seqName').value, steps: $$('#seqSteps .step').map((s) => ({ delayDays: Number(s.querySelector('.delay').value), subject: s.querySelector('.subj').value, body: s.querySelector('.bodytxt').value })) };
+    try {
+      await api('sequences' + (editingSeq ? '/' + editingSeq.id : ''), { method: editingSeq ? 'PUT' : 'POST', body });
+      closeModals(); toast('Sequence saved'); loadSequences();
+    } catch (e) { toast(e.message, true); }
+  };
+  $('#deleteSeqBtn').onclick = async () => {
+    if (!confirm('Delete this sequence?')) return;
+    try { await api('sequences/' + editingSeq.id, { method: 'DELETE' }); closeModals(); toast('Deleted'); loadSequences(); } catch (e) { toast(e.message, true); }
+  };
+
+  // ---------- setup ----------
+  async function loadStatus() {
+    try {
+      const s = await api('status');
+      const row = (ok, name, help) => `<div class="check"><span class="${ok ? 'ok' : 'no'}">${ok ? '✓' : '✕'}</span><div><b>${name}</b><div class="muted">${help}</div></div></div>`;
+      $('#checks').innerHTML = [
+        row(s.resend && s.from, 'Sending email (Resend)', 'Needs RESEND_API_KEY and CRM_FROM_EMAIL from a domain verified in Resend.' + (s.dryRun ? ' <b>DRY RUN is on — nothing is really sent.</b>' : '')),
+        row(s.replyTo, 'Replies go to your inbox', 'CRM_REPLY_TO = the mailbox you read (so replies land where reply-detection looks).'),
+        row(s.mailingAddress, 'Mailing address in footer', 'CRM_MAILING_ADDRESS — a physical address is required by CAN-SPAM for sales email.'),
+        row(s.imap, 'Reply detection: inbox check', 'CRM_IMAP_HOST / USER / PASS. Checked every 15 minutes.' + (s.imapState?.checkedAt ? ` Last check ${ago(s.imapState.checkedAt)}.` : '')),
+        row(s.inbound, 'Reply detection: webhook (optional)', 'CRM_INBOUND_SECRET, for Resend Inbound / Zapier forwarding instead of IMAP.'),
+        row(true, 'Open & click tracking', 'Pixels and links point to ' + esc(s.publicUrl)),
+      ].join('');
+      const r = s.lastRun;
+      $('#lastRun').textContent = r ? `Last run ${ago(r.at)} (${r.trigger}): ${r.sequences.processed} sequence email(s) processed; replies: ${r.replies?.error ? 'error — ' + r.replies.error : r.replies?.skipped || (r.replies?.matched ?? 0) + ' matched'}` : 'No runs yet.';
+    } catch (e) { $('#checks').textContent = e.message; }
+  }
+  $('#runNowBtn').onclick = async () => {
+    const b = $('#runNowBtn'); b.disabled = true;
+    try { await api('run', { method: 'POST' }); toast('Done'); await loadLeads(); loadStatus(); } catch (e) { toast(e.message, true); } finally { b.disabled = false; }
+  };
+
+  // keep "opened 3m ago" fresh and pick up new opens/replies
+  setInterval(() => { if (token && !$('#app').classList.contains('hidden') && !document.hidden) loadLeads().catch(() => {}); }, 60000);
+  start();
+})();
+</script>
+</body>
+</html>

@@ -5,6 +5,8 @@
 
 [functions]
   node_bundler = "esbuild"
+  # imapflow (CRM reply detection) is shipped as a normal dependency instead of being bundled
+  external_node_modules = ["imapflow"]
 
 [[headers]]
   for = "/*"
@@ -12,3 +14,10 @@
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "SAMEORIGIN"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+# CRM pages and endpoints must never be indexed or cached by search engines
+[[headers]]
+  for = "/crm/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
