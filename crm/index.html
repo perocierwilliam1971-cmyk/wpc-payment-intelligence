@@ -94,6 +94,10 @@ textarea{min-height:110px;resize:vertical}
 .check{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
 .check:last-child{border:0}
 .ok{color:var(--sale);font-weight:700}.no{color:var(--red);font-weight:700}
+.runresult{border-radius:10px;padding:12px 14px;margin-top:12px;line-height:1.55}
+.runresult.good{background:var(--sale-bg);color:#14532d;border:1px solid #bbf7d0}
+.runresult.bad{background:#fee2e2;color:#7f1d1d;border:1px solid #fecaca}
+.runresult.warn{background:#fff7ed;color:#7c2d12;border:1px solid #fed7aa}
 .login{max-width:380px;margin:12vh auto;background:#fff;padding:24px;border-radius:14px;border:1px solid var(--line)}
 code{background:#f1f4f9;padding:1px 5px;border-radius:5px;font-size:12.5px}
 .hidden{display:none!important}
@@ -156,6 +160,7 @@ code{background:#f1f4f9;padding:1px 5px;border-radius:5px;font-size:12.5px}
         <h2>Connection check</h2>
         <div id="checks" class="muted">Loading…</div>
         <div class="row-actions"><button class="btn" id="runNowBtn">Check replies &amp; send due emails now</button></div>
+        <div id="runResult" class="runresult hidden"></div>
         <p id="lastRun" class="muted"></p>
       </div>
       <div class="panel">
@@ -576,12 +581,45 @@ code{background:#f1f4f9;padding:1px 5px;border-radius:5px;font-size:12.5px}
         row(true, 'Open & click tracking', 'Pixels and links point to ' + esc(s.publicUrl)),
       ].join('');
       const r = s.lastRun;
-      $('#lastRun').textContent = r ? `Last run ${ago(r.at)} (${r.trigger}): ${r.sequences.processed} sequence email(s) processed; replies: ${r.replies?.error ? 'error — ' + r.replies.error : r.replies?.skipped || (r.replies?.matched ?? 0) + ' matched'}${r.replies?.sent ? '; Gmail sent: ' + (r.replies.sent.error ? 'error — ' + r.replies.sent.error : r.replies.sent.skipped || r.replies.sent.matched + ' logged') : ''}` : 'No runs yet.';
+      $('#lastRun').textContent = r ? `Last run ${ago(r.at)} (${r.trigger === 'schedule' ? 'automatic' : 'button'}): ${describeRun(r).text.replace(/\n/g, ' · ')}` : 'No runs yet.';
     } catch (e) { $('#checks').textContent = e.message; }
   }
+  // Plain-language summary of a run, so a failure is never hidden behind "Done".
+  function describeRun(r) {
+    const rep = r.replies || {}, lines = [];
+    let level = 'good';
+    if (rep.error) {
+      level = 'bad';
+      const auth = /auth|credential|invalid|login|password/i.test(rep.error);
+      lines.push(`❌ Couldn't open your Gmail: ${rep.error}`);
+      if (auth) lines.push('→ Gmail rejected the App Password. Create a new one, paste it into CRM_IMAP_PASS without spaces, and redeploy.');
+    } else if (rep.skipped) {
+      level = 'warn';
+      lines.push('⚠️ Gmail is not connected (CRM_IMAP_HOST / USER / PASS missing).');
+    } else {
+      lines.push(`✅ Gmail Inbox checked: ${rep.scanned ?? 0} new email(s) read, ${rep.matched ?? 0} reply(ies) from your leads.`);
+      const sent = rep.sent || {};
+      if (sent.error) { level = 'warn'; lines.push(`⚠️ Sent folder: ${sent.error}`); }
+      else if (sent.skipped) { level = 'warn'; lines.push(`⚠️ Sent folder: ${sent.skipped}`); }
+      else lines.push(`✅ Gmail Sent folder checked: ${sent.scanned ?? 0} email(s) read, ${sent.matched ?? 0} sent to your leads.`);
+      if (!rep.matched && !sent.matched) lines.push('ℹ️ Nothing matched. Only emails to/from an address saved on a lead are logged — check the lead’s email matches Gmail exactly.');
+    }
+    lines.push(`✉️ Sequence emails due and processed: ${r.sequences?.processed ?? 0}.`);
+    return { level, text: lines.join('\n') };
+  }
   $('#runNowBtn').onclick = async () => {
-    const b = $('#runNowBtn'); b.disabled = true;
-    try { await api('run', { method: 'POST' }); toast('Done'); await loadLeads(); loadStatus(); } catch (e) { toast(e.message, true); } finally { b.disabled = false; }
+    const b = $('#runNowBtn'), box = $('#runResult');
+    b.disabled = true; b.textContent = 'Checking Gmail… (up to 30 seconds)';
+    box.className = 'runresult hidden';
+    try {
+      const r = await api('run', { method: 'POST' });
+      const d = describeRun(r);
+      box.className = 'runresult ' + d.level;
+      box.innerHTML = esc(d.text).replace(/\n/g, '<br>');
+      await loadLeads(); loadStatus();
+    } catch (e) {
+      box.className = 'runresult bad'; box.textContent = '❌ ' + e.message;
+    } finally { b.disabled = false; b.textContent = 'Check replies & send due emails now'; }
   };
 
   // keep "opened 3m ago" fresh and pick up new opens/replies
