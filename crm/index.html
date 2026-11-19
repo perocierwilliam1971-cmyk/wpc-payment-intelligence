@@ -433,7 +433,14 @@ code{background:#f1f4f9;padding:1px 5px;border-radius:5px;font-size:12.5px}
   $('#newStatus').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; newStatus = b.dataset.status; $$('#newStatus button').forEach((x) => x.classList.toggle('on', x === b)); };
   $('#saveLeadBtn').onclick = async () => {
     const btn = $('#saveLeadBtn'); btn.disabled = true;
-    try { await api('leads', { method: 'POST', body: { ...formData($('#leadForm')), status: newStatus } }); closeModals(); toast('Lead added'); await loadLeads(); }
+    try {
+      const { lead } = await api('leads', { method: 'POST', body: { ...formData($('#leadForm')), status: newStatus } });
+      closeModals(); await loadLeads();
+      if (lead.email) {
+        toast('Lead added — searching Gmail for past emails with them…');
+        runAndWait().then(() => loadLeads()).catch(() => {});
+      } else toast('Lead added');
+    }
     catch (e) { toast(e.message, true); } finally { btn.disabled = false; }
   };
 
@@ -602,18 +609,32 @@ code{background:#f1f4f9;padding:1px 5px;border-radius:5px;font-size:12.5px}
       if (sent.error) { level = 'warn'; lines.push(`⚠️ Sent folder: ${sent.error}`); }
       else if (sent.skipped) { level = 'warn'; lines.push(`⚠️ Sent folder: ${sent.skipped}`); }
       else lines.push(`✅ Gmail Sent folder checked: ${sent.scanned ?? 0} email(s) read, ${sent.matched ?? 0} sent to your leads.`);
-      if (!rep.matched && !sent.matched) lines.push('ℹ️ Nothing matched. Only emails to/from an address saved on a lead are logged — check the lead’s email matches Gmail exactly.');
+      const bf = rep.backfill || {};
+      if (bf.error) { level = 'warn'; lines.push(`⚠️ Searching history for new leads failed: ${bf.error}`); }
+      else if (bf.leads) lines.push(`🔎 Searched the last 90 days of Gmail for ${bf.leads} new lead(s): ${bf.found} email(s) found.`);
+      if (!rep.matched && !sent.matched && !bf.found) lines.push('ℹ️ Nothing matched. Only emails to/from an address saved on a lead are logged — check the lead’s email matches Gmail exactly.');
     }
     lines.push(`✉️ Sequence emails due and processed: ${r.sequences?.processed ?? 0}.`);
     return { level, text: lines.join('\n') };
   }
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  // Starts a Gmail check in the background and waits (up to 3 min) for its result.
+  async function runAndWait() {
+    const r = await api('run', { method: 'POST' });
+    if (!r.started) return r; // ran directly
+    for (let i = 0; i < 60; i++) {
+      await sleep(3000);
+      const s = await api('status');
+      if (s.lastRun && s.lastRun.at >= r.requestedAt) return s.lastRun;
+    }
+    throw new Error('Still running after 3 minutes. Check the "Last run" line again in a few minutes.');
+  }
   $('#runNowBtn').onclick = async () => {
     const b = $('#runNowBtn'), box = $('#runResult');
-    b.disabled = true; b.textContent = 'Checking Gmail… (up to 30 seconds)';
+    b.disabled = true; b.textContent = 'Checking Gmail… (can take a minute)';
     box.className = 'runresult hidden';
     try {
-      const r = await api('run', { method: 'POST' });
-      const d = describeRun(r);
+      const d = describeRun(await runAndWait());
       box.className = 'runresult ' + d.level;
       box.innerHTML = esc(d.text).replace(/\n/g, '<br>');
       await loadLeads(); loadStatus();

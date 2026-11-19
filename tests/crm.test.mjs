@@ -185,3 +185,50 @@ test('Gmail sync: replies in Inbox and emails you wrote in Sent are logged once'
   assert.equal(ev.find((e) => e.type === 'mailsent').subject, 'Proposal attached');
   assert.equal((await core.getLead(store, id)).status, 'warm');
 });
+
+test('a lead added after Gmail was already checked still gets its past emails (90-day history search)', async () => {
+  const store = await getCrmStore();
+  const now = new Date();
+  const boxes = {
+    INBOX: [{ uid: 20, envelope: { from: [{ address: 'late@lead.com' }], subject: 'Re: your rates', messageId: '<late-r>', date: now } }],
+    '[Gmail]/Sent Mail': [{ uid: 30, envelope: { to: [{ address: 'late@lead.com' }], subject: 'Intro', messageId: '<late-s>', date: now } }],
+  };
+  const has = (list, e) => (list || []).some((a) => a.address.toLowerCase() === e);
+  const fake = {
+    mailbox: null,
+    async list() { return [{ path: 'INBOX' }, { path: '[Gmail]/Sent Mail', specialUse: '\\Sent' }]; },
+    async getMailboxLock(name) { this.mailbox = { uidValidity: 7n, name }; return { release() {} }; },
+    async search(q) {
+      return boxes[this.mailbox.name].filter((m) => (q.from && has(m.envelope.from, q.from))
+        || (q.or && q.or.some((c) => has(m.envelope[Object.keys(c)[0]], Object.values(c)[0])))).map((m) => m.uid);
+    },
+    async *fetch(range) {
+      const msgs = boxes[this.mailbox.name];
+      if (Array.isArray(range)) yield* msgs.filter((m) => range.includes(m.uid));
+      else if (typeof range === 'string') { const from = Number(range.split(':')[0]); const f = msgs.filter((m) => m.uid >= from); yield* (f.length ? f : [msgs.at(-1)]); }
+      else yield* msgs;
+    },
+  };
+  // Gmail checked before the lead exists: nothing matches, and the CRM remembers it has read these emails.
+  await core.checkImapReplies(store, fake);
+  const { data } = await call('POST', 'leads', { business_name: 'Late Lead', email: 'late@lead.com' });
+  // Next check: regular scan finds nothing new, but the history search finds both emails.
+  const r = await core.checkImapReplies(store, fake);
+  assert.equal(r.matched, 0);
+  assert.ok(r.backfill.leads >= 1);
+  assert.equal(r.backfill.found, 2);
+  const ev = await events(data.lead.id);
+  assert.equal(ev.filter((e) => e.type === 'reply').length, 1);
+  assert.equal(ev.filter((e) => e.type === 'mailsent').length, 1);
+  // Only once per lead
+  const again = await core.checkImapReplies(store, fake);
+  assert.equal(again.backfill.leads, 0);
+});
+
+test('runSync records the result even when Gmail is not configured', async () => {
+  const store = await getCrmStore();
+  const r = await core.runSync(store, 'button');
+  assert.equal(r.replies.skipped, 'IMAP not configured');
+  assert.equal((await store.get('meta/lastRun')).trigger, 'button');
+  assert.equal(await store.get('meta/syncRunning'), null);
+});

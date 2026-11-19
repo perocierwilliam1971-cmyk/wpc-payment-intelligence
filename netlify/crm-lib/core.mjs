@@ -466,6 +466,51 @@ const sentHandler = (store) => async ({ env, messageId, at }) => {
   return (await recordOutgoing(store, { to, subject: env.subject || '', messageId, at })).matched;
 };
 
+const FETCH_QUERY = { uid: true, envelope: true, headers: ['auto-submitted', 'x-autoreply', 'x-autorespond', 'precedence'] };
+const BACKFILL_DAYS = 90;
+const BACKFILL_LEADS_PER_RUN = 25;
+
+// Runs one IMAP search in a mailbox and feeds the matching messages to onMessage.
+async function scanSearch(client, mailbox, search, onMessage) {
+  const lock = await client.getMailboxLock(mailbox);
+  let matched = 0, scanned = 0;
+  try {
+    const uids = await client.search(search, { uid: true });
+    if (!uids || !uids.length) return { scanned, matched };
+    for await (const msg of client.fetch(uids.slice(-300), FETCH_QUERY, { uid: true })) {
+      scanned++;
+      const env = msg.envelope || {};
+      matched += (await onMessage({
+        env, headers: (msg.headers || '').toString().toLowerCase(),
+        messageId: env.messageId || `${mailbox}:${String(client.mailbox.uidValidity)}:${msg.uid}`,
+        at: env.date ? new Date(env.date).getTime() : Date.now(),
+      })) || 0;
+    }
+  } finally {
+    lock.release();
+  }
+  return { scanned, matched };
+}
+
+// New leads (or leads whose email changed) get a one-time search of the last 90 days of Gmail,
+// because the regular check only reads mail that arrived after its previous run.
+async function backfillLeads(client, store, sentBox) {
+  const { imap } = config();
+  const pending = (await listLeads(store)).filter((l) => l.email && l.gmailSyncedEmail !== l.email).slice(0, BACKFILL_LEADS_PER_RUN);
+  let found = 0;
+  const since = new Date(Date.now() - BACKFILL_DAYS * DAY);
+  for (const lead of pending) {
+    found += (await scanSearch(client, imap.mailbox, { from: lead.email, since }, replyHandler(store))).matched;
+    if (sentBox) {
+      const search = { or: [{ to: lead.email }, { cc: lead.email }, { bcc: lead.email }], since };
+      found += (await scanSearch(client, sentBox, search, sentHandler(store))).matched;
+    }
+    const fresh = await getLead(store, lead.id);
+    if (fresh) { fresh.gmailSyncedEmail = lead.email; await saveLead(store, fresh); }
+  }
+  return { leads: pending.length, found };
+}
+
 // Checks the inbox for replies from leads, and the Sent folder for emails you wrote to leads in Gmail.
 export async function checkImapReplies(store, client = null) {
   const { imap } = config();
@@ -473,23 +518,54 @@ export async function checkImapReplies(store, client = null) {
   let own = false;
   if (!client) {
     const { ImapFlow } = await import('imapflow');
-    client = new ImapFlow({ host: imap.host, port: imap.port, secure: imap.port === 993, auth: { user: imap.user, pass: imap.pass }, logger: false });
+    client = new ImapFlow({
+      host: imap.host, port: imap.port, secure: imap.port === 993, auth: { user: imap.user, pass: imap.pass },
+      logger: false, connectionTimeout: 20000, greetingTimeout: 20000, socketTimeout: 120000,
+    });
     await client.connect();
     own = true;
   }
   try {
     const inbox = await scanMailbox(client, store, imap.mailbox, 'meta/imap', replyHandler(store));
-    let sent;
+    let sent, box = null;
     try {
-      const box = await findSentMailbox(client);
+      box = await findSentMailbox(client);
       sent = box ? await scanMailbox(client, store, box, 'meta/imapsent', sentHandler(store)) : { skipped: 'Sent folder not found' };
     } catch (e) {
       sent = { error: e.message };
     }
-    return { ...inbox, sent };
+    let backfill;
+    try { backfill = await backfillLeads(client, store, box); } catch (e) { backfill = { error: e.message }; }
+    return { ...inbox, sent, backfill };
   } finally {
     if (own) await client.logout().catch(() => {});
   }
+}
+
+// One full pass: Gmail (replies, Gmail-sent, history for new leads) then due sequence emails.
+export async function runSync(store, trigger) {
+  const startedAt = Date.now();
+  await store.set('meta/syncRunning', { startedAt, trigger });
+  let replies;
+  try { replies = await checkImapReplies(store); } catch (e) { replies = { error: e.message }; }
+  let sequences;
+  try { sequences = await runDueSequences(store); } catch (e) { sequences = { processed: 0, error: e.message }; }
+  const result = { at: Date.now(), startedAt, replies, sequences, trigger };
+  await store.set('meta/lastRun', result);
+  await store.delete('meta/syncRunning');
+  console.log('crm-run', JSON.stringify(result));
+  return result;
+}
+
+// Key that lets our own functions start the background sync (it has a public URL).
+export function syncKey() {
+  return crypto.createHmac('sha256', config().trackingSecret || 'unset').update('crm-sync-v1').digest('hex');
+}
+export async function startBackgroundSync(origin, trigger) {
+  const res = await fetch(`${origin.replace(/\/$/, '')}/.netlify/functions/crm-sync-background`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json', 'x-crm-sync': syncKey() }, body: JSON.stringify({ trigger }),
+  });
+  if (res.status !== 202 && !res.ok) throw new Error(`Background sync did not start (HTTP ${res.status})`);
 }
 
 // ---------- misc ----------
