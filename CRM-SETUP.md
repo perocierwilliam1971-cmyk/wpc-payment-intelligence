@@ -11,7 +11,7 @@ It deploys with the rest of the site; data is stored in Netlify Blobs (no databa
 | Website leads flow in | Every `merchant-leads` form submission becomes a **New** lead; an `analysis-results` submission makes it **Warm**. |
 | Open tracking | An invisible image in each email. Opens within 2 minutes of sending are labeled "possibly automatic" (security scanners, Apple Mail). |
 | Click tracking | Links in your emails go through `/t/c/...` and are logged. Clicks are a stronger signal than opens. |
-| Reply detection | Checks your inbox (IMAP) every 15 minutes, and/or accepts an inbound-email webhook. A reply moves a New lead to Warm and stops its sequence. Out-of-office replies are ignored. |
+| Reply detection + Gmail log | Checks your inbox (IMAP) every 15 minutes for replies, and your Sent folder for emails you wrote to leads directly in Gmail (logged as "not tracked"), and/or accepts an inbound-email webhook. A reply moves a New lead to Warm and stops its sequence. Out-of-office replies are ignored. |
 | Email sequences | A series of emails, days apart, sent automatically every 15 minutes. Stops on reply, unsubscribe, or Sale. |
 | Unsubscribe | Every email has an unsubscribe link plus one-click unsubscribe headers (needed for Gmail/Yahoo). |
 
@@ -37,6 +37,7 @@ Netlify → Project configuration → Environment variables. Redeploy after chan
 | `CRM_IMAP_USER` | The mailbox from `CRM_REPLY_TO`. |
 | `CRM_IMAP_PASS` | Google: an **App Password** (needs 2-Step Verification), not your normal password. |
 | `CRM_IMAP_PORT` / `CRM_IMAP_MAILBOX` | Optional, default `993` / `INBOX`. |
+| `CRM_IMAP_SENT_MAILBOX` | Optional. Found automatically (Gmail: `[Gmail]/Sent Mail`). |
 | `CRM_INBOUND_SECRET` | For webhooks: POST JSON `{ "from": "...", "subject": "..." }` to `https://your-site/api/crm/inbound?key=<secret>`. Works with Resend Inbound, Zapier ("New Email in Gmail/Outlook" → Webhook POST) or Make. |
 
 > **Microsoft 365:** Microsoft has turned off password login for IMAP. Use the webhook route (Zapier/Make "new email" → POST) instead.

@@ -146,3 +146,42 @@ test('scheduled runner works without IMAP configured', async () => {
   const store = await getCrmStore();
   assert.equal((await store.get('meta/lastRun')).replies.skipped, 'IMAP not configured');
 });
+
+test('Gmail sync: replies in Inbox and emails you wrote in Sent are logged once', async () => {
+  const store = await getCrmStore();
+  const { data } = await call('POST', 'leads', { business_name: 'Gmail Diner', contact_name: 'Rosa', email: 'rosa@diner.com' });
+  const id = data.lead.id;
+  const now = new Date();
+  const boxes = {
+    INBOX: [
+      { uid: 5, envelope: { from: [{ address: 'stranger@x.com' }], subject: 'Hello', messageId: '<a>', date: now } },
+      { uid: 6, envelope: { from: [{ address: 'Rosa@Diner.com' }], subject: 'Re: rates', messageId: '<b>', date: now } },
+    ],
+    '[Gmail]/Sent Mail': [
+      { uid: 9, envelope: { to: [{ address: 'rosa@diner.com' }], cc: [], subject: 'Proposal attached', messageId: '<c>', date: now } },
+      { uid: 10, envelope: { to: [{ address: 'someone@else.com' }], subject: 'Unrelated', messageId: '<d>', date: now } },
+    ],
+  };
+  const fake = {
+    mailbox: null,
+    async list() { return [{ path: 'INBOX' }, { path: '[Gmail]/Sent Mail', specialUse: '\\Sent' }]; },
+    async getMailboxLock(name) { this.mailbox = { uidValidity: 1n, name }; return { release() {} }; },
+    async *fetch(range) {
+      const msgs = boxes[this.mailbox.name];
+      if (typeof range === 'string') { const from = Number(range.split(':')[0]); yield* msgs.filter((m) => m.uid >= from); if (!msgs.some((m) => m.uid >= from)) yield msgs.at(-1); }
+      else yield* msgs;
+    },
+  };
+  const first = await core.checkImapReplies(store, fake);
+  assert.equal(first.matched, 1);
+  assert.equal(first.sent.matched, 1);
+  const second = await core.checkImapReplies(store, fake); // nothing new: no duplicates
+  assert.equal(second.matched, 0);
+  assert.equal(second.sent.matched, 0);
+
+  const ev = await events(id);
+  assert.equal(ev.filter((e) => e.type === 'reply').length, 1);
+  assert.equal(ev.filter((e) => e.type === 'mailsent').length, 1);
+  assert.equal(ev.find((e) => e.type === 'mailsent').subject, 'Proposal attached');
+  assert.equal((await core.getLead(store, id)).status, 'warm');
+});
