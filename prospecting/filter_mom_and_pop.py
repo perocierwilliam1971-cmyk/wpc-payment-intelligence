@@ -26,6 +26,8 @@ aire serv mr. rooter mr. electric pop-a-lock
 total wine bevmo spec's abc fine wine 7-eleven circle k wawa sheetz casey's speedway
 quiktrip racetrac cumberland farms
 1-800-flowers ftd petsmart petco
+aspen dental heartland dental pacific dental western dental gentle dental bright now coast dental
+banfield vca bluepearl thrive pet medical the joint chiropractic
 """.split()
 # multi-word brands need phrase matching
 PHRASES = [p.strip() for p in """
@@ -36,7 +38,7 @@ hair cuttery|european wax center|massage envy|hand & stone|the joint|jiffy lube|
 discount tire|les schwab|big o tires|tires plus|christian brothers|take 5|grease monkey|
 caliber collision|service king|gerber collision|mister sparky|one hour heating|
 benjamin franklin plumbing|ars rescue rooter|aire serv|mr. rooter|mr. electric|pop-a-lock|
-total wine|abc fine wine|circle k|cumberland farms""".replace("\n", "").split("|")]
+total wine|abc fine wine|circle k|cumberland farms|aspen dental|heartland dental|pacific dental|western dental|gentle dental|bright now|coast dental|bluepearl|thrive pet|the joint chiropractic""".replace("\n", "").split("|")]
 SINGLE = {w for w in CHAINS if w not in " ".join(PHRASES).split()}
 
 def norm(s): return re.sub(r"\s+", " ", (s or "").lower()).strip()

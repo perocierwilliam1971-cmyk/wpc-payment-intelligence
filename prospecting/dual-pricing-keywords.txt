@@ -1,5 +1,11 @@
 # Dual-pricing / cash-discount targets: high card mix, thin margins, owner on site.
 # Use with: python3 scripts/scrape.py --keywords-file dual-pricing-keywords.txt --city "Your City, ST" --depth 5 --has-phone --verify-emails
+# Healthcare & animal care (self-pay / out-of-pocket heavy)
+dentists
+cosmetic dentists
+chiropractors
+veterinarians
+animal hospitals
 # Food & drink
 food trucks
 coffee shops
