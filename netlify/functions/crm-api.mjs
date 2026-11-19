@@ -47,17 +47,21 @@ export default async (req) => {
         mailingAddress: Boolean(cfg.mailingAddress), publicUrl: cfg.publicUrl,
         imap: Boolean(cfg.imap.host && cfg.imap.user && cfg.imap.pass), inbound: Boolean(cfg.inboundSecret),
         dryRun: cfg.dryRun, imapState: await store.get('meta/imap'), lastRun: await store.get('meta/lastRun'),
+        syncRunning: await store.get('meta/syncRunning'),
       });
     }
 
     if (resource === 'run' && method === 'POST') {
-      let replies;
-      try { replies = await crm.checkImapReplies(store); } catch (e) { replies = { error: e.message }; }
-      const sequences = await crm.runDueSequences(store);
-      const result = { at: Date.now(), replies, sequences, trigger: 'manual' };
-      await store.set('meta/lastRun', result);
-      console.log('crm-run', JSON.stringify(result));
-      return json(200, result);
+      // Gmail can take longer than a normal request is allowed, so the work runs in the background.
+      // The page then watches /status until lastRun is newer than this start time.
+      const requestedAt = Date.now();
+      try {
+        await crm.startBackgroundSync(new URL(req.url).origin, 'button');
+        return json(202, { started: true, requestedAt });
+      } catch (e) {
+        console.error(e.message);
+        return json(200, { ...(await crm.runSync(store, 'button')), requestedAt });
+      }
     }
 
     if (resource === 'leads') {
