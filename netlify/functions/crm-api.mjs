@@ -56,6 +56,7 @@ export default async (req) => {
       const sequences = await crm.runDueSequences(store);
       const result = { at: Date.now(), replies, sequences, trigger: 'manual' };
       await store.set('meta/lastRun', result);
+      console.log('crm-run', JSON.stringify(result));
       return json(200, result);
     }
 
