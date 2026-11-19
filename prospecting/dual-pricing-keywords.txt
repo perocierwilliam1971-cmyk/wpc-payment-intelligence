@@ -1,0 +1,47 @@
+# Dual-pricing / cash-discount targets: high card mix, thin margins, owner on site.
+# Use with: python3 scripts/scrape.py --keywords-file dual-pricing-keywords.txt --city "Your City, ST" --depth 5 --has-phone --verify-emails
+# Food & drink
+food trucks
+coffee shops
+cafes
+bakeries
+donut shops
+pizza restaurants
+delis
+taquerias
+food stands
+ice cream shops
+bubble tea shops
+juice bars
+liquor stores
+convenience stores
+smoke shops
+vape shops
+# Beauty & personal care
+nail salons
+day spas
+massage spas
+barber shops
+hair salons
+beauty salons
+eyelash extension studios
+waxing salons
+tattoo shops
+# Auto
+auto repair shops
+auto body shops
+tire shops
+oil change shops
+auto detailing
+# Home services
+HVAC contractors
+plumbers
+electricians
+locksmiths
+appliance repair
+# Other walk-in retail/service
+dry cleaners
+laundromats
+florists
+shoe repair
+pet groomers
