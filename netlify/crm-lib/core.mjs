@@ -34,6 +34,7 @@ export function config() {
       user: env('CRM_IMAP_USER'),
       pass: env('CRM_IMAP_PASS'),
       mailbox: env('CRM_IMAP_MAILBOX', 'INBOX'),
+      sentMailbox: env('CRM_IMAP_SENT_MAILBOX'),
     },
   };
 }
@@ -397,16 +398,29 @@ export async function recordReply(store, { from, subject = '', messageId = '', a
   return { matched: true, leadId: lead.id };
 }
 
-export async function checkImapReplies(store) {
-  const { imap } = config();
-  if (!imap.host || !imap.user || !imap.pass) return { skipped: 'IMAP not configured' };
-  const { ImapFlow } = await import('imapflow');
-  const client = new ImapFlow({ host: imap.host, port: imap.port, secure: imap.port === 993, auth: { user: imap.user, pass: imap.pass }, logger: false });
-  await client.connect();
+// Emails you write in Gmail (not through the CRM) to a lead's address. Not tracked: no pixel or links.
+export async function recordOutgoing(store, { to = [], subject = '', messageId = '', at = Date.now() }) {
+  const leadIds = new Set();
+  for (const addr of to) {
+    const lead = await findLeadByEmail(store, parseAddress(addr));
+    if (lead) leadIds.add(lead.id);
+  }
+  if (!leadIds.size) return { matched: 0 };
+  if (messageId) {
+    const seenKey = `seen/out-${crypto.createHash('sha256').update(messageId).digest('hex').slice(0, 40)}`;
+    if (await store.get(seenKey)) return { matched: 0, duplicate: true };
+    await store.set(seenKey, { at: Date.now() });
+  }
+  for (const id of leadIds) await addEvent(store, id, 'mailsent', { subject: String(subject).slice(0, 300), source: 'gmail' }, at);
+  return { matched: leadIds.size };
+}
+
+// Reads new messages from one mailbox, remembering where it stopped (per mailbox) between runs.
+export async function scanMailbox(client, store, mailbox, metaKey, onMessage) {
+  const lock = await client.getMailboxLock(mailbox);
   let matched = 0, scanned = 0;
-  const lock = await client.getMailboxLock(imap.mailbox);
   try {
-    const meta = (await store.get('meta/imap')) || {};
+    const meta = (await store.get(metaKey)) || {};
     const validity = String(client.mailbox.uidValidity);
     const resume = meta.uidValidity === validity && meta.lastUid;
     const range = resume ? `${meta.lastUid + 1}:*` : { since: new Date(Date.now() - 14 * DAY) };
@@ -417,22 +431,65 @@ export async function checkImapReplies(store) {
       scanned++;
       lastUid = Math.max(lastUid, msg.uid);
       const env = msg.envelope || {};
-      const from = env.from?.[0]?.address;
-      if (!from) continue;
-      const h = (msg.headers || '').toString().toLowerCase();
-      const auto = /auto-submitted:\s*(?!no)\S/.test(h) || /x-autoreply|x-autorespond/.test(h) || /precedence:\s*(auto_reply|bulk|junk)/.test(h);
-      const r = await recordReply(store, {
-        from, subject: env.subject || '', messageId: env.messageId || `${validity}:${msg.uid}`,
-        at: env.date ? new Date(env.date).getTime() : Date.now(), auto, source: 'inbox',
-      });
-      if (r.matched && !r.duplicate) matched++;
+      const info = {
+        env, headers: (msg.headers || '').toString().toLowerCase(),
+        messageId: env.messageId || `${mailbox}:${validity}:${msg.uid}`,
+        at: env.date ? new Date(env.date).getTime() : Date.now(),
+      };
+      matched += (await onMessage(info)) || 0;
     }
-    await store.set('meta/imap', { uidValidity: validity, lastUid, checkedAt: Date.now() });
+    await store.set(metaKey, { mailbox, uidValidity: validity, lastUid, checkedAt: Date.now() });
   } finally {
     lock.release();
-    await client.logout().catch(() => {});
   }
   return { scanned, matched };
+}
+
+async function findSentMailbox(client) {
+  const override = config().imap.sentMailbox;
+  if (override) return override;
+  const boxes = await client.list();
+  return boxes.find((b) => b.specialUse === '\\Sent')?.path
+    || boxes.find((b) => /^(\[gmail\]\/)?sent( mail| items)?$/i.test(b.path))?.path
+    || null;
+}
+
+const replyHandler = (store) => async ({ env, headers, messageId, at }) => {
+  const from = env.from?.[0]?.address;
+  if (!from) return 0;
+  const auto = /auto-submitted:\s*(?!no)\S/.test(headers) || /x-autoreply|x-autorespond/.test(headers) || /precedence:\s*(auto_reply|bulk|junk)/.test(headers);
+  const r = await recordReply(store, { from, subject: env.subject || '', messageId, at, auto, source: 'inbox' });
+  return r.matched && !r.duplicate ? 1 : 0;
+};
+const sentHandler = (store) => async ({ env, messageId, at }) => {
+  const to = [...(env.to || []), ...(env.cc || []), ...(env.bcc || [])].map((a) => a.address).filter(Boolean);
+  return (await recordOutgoing(store, { to, subject: env.subject || '', messageId, at })).matched;
+};
+
+// Checks the inbox for replies from leads, and the Sent folder for emails you wrote to leads in Gmail.
+export async function checkImapReplies(store, client = null) {
+  const { imap } = config();
+  if (!client && (!imap.host || !imap.user || !imap.pass)) return { skipped: 'IMAP not configured' };
+  let own = false;
+  if (!client) {
+    const { ImapFlow } = await import('imapflow');
+    client = new ImapFlow({ host: imap.host, port: imap.port, secure: imap.port === 993, auth: { user: imap.user, pass: imap.pass }, logger: false });
+    await client.connect();
+    own = true;
+  }
+  try {
+    const inbox = await scanMailbox(client, store, imap.mailbox, 'meta/imap', replyHandler(store));
+    let sent;
+    try {
+      const box = await findSentMailbox(client);
+      sent = box ? await scanMailbox(client, store, box, 'meta/imapsent', sentHandler(store)) : { skipped: 'Sent folder not found' };
+    } catch (e) {
+      sent = { error: e.message };
+    }
+    return { ...inbox, sent };
+  } finally {
+    if (own) await client.logout().catch(() => {});
+  }
 }
 
 // ---------- misc ----------
